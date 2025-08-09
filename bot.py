@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # Replace this with your real token from BotFather
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+TOKEN = "8093299819:AAFnsBL1N4pAjkyiA9t9Mn7FU3ICeG_zF7c"
 
 # Lessons stored in a dictionary
 lessons = {
