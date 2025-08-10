@@ -1,26 +1,39 @@
-# bot.py - sends a WebApp button that opens your hosted learning page
 import os
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, Update
+from flask import Flask, render_template
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from threading import Thread
 
-# safer: put your token in Render/GitHub secrets, or keep here for testing
 TOKEN = os.getenv("BOT_TOKEN")
 
-# the URL of your hosted web page (replace after you deploy the web app)
-WEBAPP_URL = os.getenv("WEBAPP_URL") or "https://your-webapp-url.example"
+# Flask app to serve the mini app
+app = Flask(__name__)
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+# /start command for Telegram bot
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    kb = [
-        [InlineKeyboardButton("📚 Open Learning Page", web_app=WebAppInfo(url=WEBAPP_URL))],
+    keyboard = [
+        [KeyboardButton("📖 Discourse Markers", web_app=WebAppInfo(url="https://YOUR-RENDER-APP.onrender.com"))]
     ]
-    reply = InlineKeyboardMarkup(kb)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
-        "Welcome to English Decoded! Tap the button below to open the learning page.",
-        reply_markup=reply
+        "Welcome to *English Decoded*! 📚\n\nTap the button below to open the lesson:",
+        parse_mode="Markdown",
+        reply_markup=reply_markup
     )
 
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    print("✅ Bot is running (webapp button)...")
-    app.run_polling()
+    # Start Flask in background
+    Thread(target=run_flask).start()
+
+    # Start Telegram bot
+    application = ApplicationBuilder().token(TOKEN).build()
+    application.add_handler(CommandHandler("start", start))
+    application.run_polling()
