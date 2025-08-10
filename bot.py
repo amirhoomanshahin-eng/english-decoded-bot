@@ -1,4 +1,4 @@
-f# bot.py - sends a WebApp button that opens your hosted learning page
+# bot.py - sends a WebApp button that opens your hosted learning page
 import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
