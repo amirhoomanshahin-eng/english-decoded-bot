@@ -56,7 +56,6 @@ def log_time(user_id, start_time, end_time):
 
 def get_weekly_time(user_id):
     now = datetime.datetime.now(TEHRAN_TZ)
-    # Saturday=5, Python weekday Monday=0 → calculate days since last Saturday
     days_since_saturday = (now.weekday() + 2) % 7
     week_start = now - datetime.timedelta(days=days_since_saturday)
     week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -96,7 +95,7 @@ def lesson(lesson_name, user_id):
 def log_time_endpoint():
     data = request.json
     user_id = data.get("user_id")
-    duration = data.get("duration")
+    duration = data.get("duration")  # seconds
     start_time = datetime.datetime.now(TEHRAN_TZ) - datetime.timedelta(seconds=duration)
     end_time = datetime.datetime.now(TEHRAN_TZ)
     log_time(user_id, start_time, end_time)
