@@ -1,11 +1,14 @@
 import os
 import sqlite3
+import datetime
+import pytz
 from flask import Flask, render_template, request
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from threading import Thread
 
 TOKEN = os.getenv("BOT_TOKEN")
+TEHRAN_TZ = pytz.timezone("Asia/Tehran")
 
 # ---------------- DATABASE FUNCTIONS ---------------- #
 def init_db():
@@ -15,6 +18,14 @@ def init_db():
         CREATE TABLE IF NOT EXISTS progress (
             user_id INTEGER PRIMARY KEY,
             lesson TEXT
+        )
+    """)
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS time_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            start_time TEXT,
+            end_time TEXT
         )
     """)
     conn.commit()
@@ -35,7 +46,38 @@ def get_progress(user_id):
     conn.close()
     return row[0] if row else None
 
-# Initialize DB on startup
+def log_time(user_id, start_time, end_time):
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("INSERT INTO time_logs (user_id, start_time, end_time) VALUES (?, ?, ?)",
+              (user_id, start_time.isoformat(), end_time.isoformat()))
+    conn.commit()
+    conn.close()
+
+def get_weekly_time(user_id):
+    now = datetime.datetime.now(TEHRAN_TZ)
+    # find the last Saturday 00:00 in Tehran time
+    days_since_saturday = (now.weekday() + 2) % 7  # Saturday = 5 in Python’s weekday
+    week_start = now - datetime.timedelta(days=days_since_saturday)
+    week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("SELECT start_time, end_time FROM time_logs WHERE user_id=?", (user_id,))
+    rows = c.fetchall()
+    conn.close()
+
+    total_seconds = 0
+    for start, end in rows:
+        start_dt = datetime.datetime.fromisoformat(start).astimezone(TEHRAN_TZ)
+        end_dt = datetime.datetime.fromisoformat(end).astimezone(TEHRAN_TZ)
+        if start_dt >= week_start:
+            total_seconds += (end_dt - start_dt).total_seconds()
+
+    minutes = int(total_seconds // 60)
+    return minutes
+
+# Initialize DB
 init_db()
 
 # ---------------- FLASK APP ---------------- #
@@ -47,17 +89,13 @@ def index():
 
 @app.route("/lesson/<lesson_name>/<int:user_id>")
 def lesson(lesson_name, user_id):
-    # save user progress whenever they visit a lesson
+    # mark lesson progress
     save_progress(user_id, lesson_name)
+    # simulate start time (in real case, you'd track with JS pings)
+    start_time = datetime.datetime.now(TEHRAN_TZ)
+    end_time = start_time + datetime.timedelta(minutes=2)  # assume 2 min spent per visit for demo
+    log_time(user_id, start_time, end_time)
     return render_template(f"{lesson_name}.html")
-
-@app.route("/progress/<int:user_id>")
-def progress(user_id):
-    last = get_progress(user_id)
-    if last:
-        return f"Your last lesson was: {last}"
-    else:
-        return "No progress yet!"
 
 # ---------------- TELEGRAM BOT ---------------- #
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -70,10 +108,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_text = "Welcome to *English Decoded*! 📚\n\nTap below to start your first lesson:"
 
     keyboard = [
-        [KeyboardButton(
-            "📖 Discourse Markers",
-            web_app=WebAppInfo(url=f"https://english-decoded-bot.onrender.com/lesson/discourse_markers/{user_id}")
-        )]
+        [KeyboardButton("📖 Discourse Markers", web_app=WebAppInfo(
+            url=f"https://english-decoded-bot.onrender.com/lesson/discourse_markers/{user_id}"
+        ))],
+        [KeyboardButton("📊 My Progress")]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
@@ -81,6 +119,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_text,
         parse_mode="Markdown",
         reply_markup=reply_markup
+    )
+
+async def my_progress(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    minutes = get_weekly_time(user_id)
+    await update.message.reply_text(
+        f"⏳ This week (Sat–Fri, Tehran time), you’ve studied for *{minutes} minutes*."
     )
 
 # ---------------- RUN BOTH ---------------- #
@@ -95,4 +140,5 @@ if __name__ == "__main__":
     # Start Telegram bot
     application = ApplicationBuilder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.Regex("^📊 My Progress$"), my_progress))
     application.run_polling()
