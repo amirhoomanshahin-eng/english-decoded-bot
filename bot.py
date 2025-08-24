@@ -2,7 +2,7 @@ import os
 import sqlite3
 import datetime
 import pytz
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from threading import Thread
@@ -10,7 +10,7 @@ from threading import Thread
 TOKEN = os.getenv("BOT_TOKEN")
 TEHRAN_TZ = pytz.timezone("Asia/Tehran")
 
-# ---------------- DATABASE FUNCTIONS ---------------- #
+# ---------------- DATABASE ---------------- #
 def init_db():
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
@@ -56,8 +56,8 @@ def log_time(user_id, start_time, end_time):
 
 def get_weekly_time(user_id):
     now = datetime.datetime.now(TEHRAN_TZ)
-    # find the last Saturday 00:00 in Tehran time
-    days_since_saturday = (now.weekday() + 2) % 7  # Saturday = 5 in Python’s weekday
+    # Saturday=5, Python weekday Monday=0 → calculate days since last Saturday
+    days_since_saturday = (now.weekday() + 2) % 7
     week_start = now - datetime.timedelta(days=days_since_saturday)
     week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -80,7 +80,7 @@ def get_weekly_time(user_id):
 # Initialize DB
 init_db()
 
-# ---------------- FLASK APP ---------------- #
+# ---------------- FLASK ---------------- #
 app = Flask(__name__)
 
 @app.route("/")
@@ -89,13 +89,18 @@ def index():
 
 @app.route("/lesson/<lesson_name>/<int:user_id>")
 def lesson(lesson_name, user_id):
-    # mark lesson progress
     save_progress(user_id, lesson_name)
-    # simulate start time (in real case, you'd track with JS pings)
-    start_time = datetime.datetime.now(TEHRAN_TZ)
-    end_time = start_time + datetime.timedelta(minutes=2)  # assume 2 min spent per visit for demo
+    return render_template(f"{lesson_name}.html", user_id=user_id)
+
+@app.route("/log_time", methods=["POST"])
+def log_time_endpoint():
+    data = request.json
+    user_id = data.get("user_id")
+    duration = data.get("duration")
+    start_time = datetime.datetime.now(TEHRAN_TZ) - datetime.timedelta(seconds=duration)
+    end_time = datetime.datetime.now(TEHRAN_TZ)
     log_time(user_id, start_time, end_time)
-    return render_template(f"{lesson_name}.html")
+    return jsonify({"status": "success"})
 
 # ---------------- TELEGRAM BOT ---------------- #
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -134,10 +139,7 @@ def run_flask():
     app.run(host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
-    # Start Flask in background
     Thread(target=run_flask).start()
-
-    # Start Telegram bot
     application = ApplicationBuilder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.Regex("^📊 My Progress$"), my_progress))
