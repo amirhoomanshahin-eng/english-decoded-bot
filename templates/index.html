@@ -1,11 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Decoded</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .content {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to English Decoded!</h1>
-  <p>Use Telegram buttons to start lessons or check your progress.</p>
+  <div class="content">
+    <h1>📖 English Decoded</h1>
+    <p>Welcome to the mini-app! Your study time will be tracked automatically while this page is open.</p>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    const userId = tg.initDataUnsafe?.user?.id;
+
+    if (userId) {
+      // Immediately notify server that user opened app
+      fetch("/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, action: "open" })
+      });
+
+      // Send heartbeat every 30 seconds
+      setInterval(() => {
+        fetch("/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, action: "heartbeat" })
+        });
+      }, 30000);
+
+      // On close, send goodbye
+      window.addEventListener("beforeunload", () => {
+        fetch("/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, action: "close" })
+        });
+      });
+    }
+  </script>
 </body>
 </html>
