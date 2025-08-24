@@ -7,17 +7,16 @@
     let startTime = Date.now();
     const user_id = parseInt("{{ user_id }}");
 
-    function sendTimeSpent() {
+    function finishLesson() {
       let endTime = Date.now();
       let duration = Math.floor((endTime - startTime) / 1000);
-      fetch("/log_time", {
+
+      fetch(`https://english-decoded-bot.onrender.com/log_time`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: user_id, duration: duration })
-      });
+      }).then(res => alert("✅ Time saved!"));
     }
-
-    window.addEventListener("beforeunload", sendTimeSpent);
   </script>
 </head>
 <body>
@@ -29,5 +28,6 @@
     <li><b>Therefore</b> – shows result.</li>
     <li><b>In conclusion</b> – signals the end.</li>
   </ul>
+  <button onclick="finishLesson()">Finish Lesson</button>
 </body>
 </html>
