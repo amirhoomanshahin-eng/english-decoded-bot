@@ -1,33 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Discourse Markers</title>
-  <script>
-    let startTime = Date.now();
-    const user_id = parseInt("{{ user_id }}");
-
-    function finishLesson() {
-      let endTime = Date.now();
-      let duration = Math.floor((endTime - startTime) / 1000);
-
-      fetch(`https://english-decoded-bot.onrender.com/log_time`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: user_id, duration: duration })
-      }).then(res => alert("✅ Time saved!"));
-    }
-  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <h1>📖 Discourse Markers</h1>
-  <p>Discourse markers are words or phrases that organize your speech and writing.</p>
-  <ul>
-    <li><b>Firstly</b> – introduces the first point.</li>
-    <li><b>However</b> – shows contrast.</li>
-    <li><b>Therefore</b> – shows result.</li>
-    <li><b>In conclusion</b> – signals the end.</li>
-  </ul>
-  <button onclick="finishLesson()">Finish Lesson</button>
+  <p>Here you’ll learn how to use discourse markers in English.</p>
+
+  <button id="finishBtn">✅ Finish Lesson</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // make mini app full screen
+
+    // user_id comes from Flask via URL /lesson/discourse_markers/<user_id>
+    const userId = "{{ user_id }}";  
+    const startTime = Date.now();
+
+    document.getElementById("finishBtn").addEventListener("click", async () => {
+      const endTime = Date.now();
+      const duration = Math.floor((endTime - startTime) / 1000); // seconds spent
+
+      await fetch("/log_time", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId,
+          duration: duration
+        })
+      });
+
+      tg.close(); // close mini app and return to chat
+    });
+  </script>
 </body>
 </html>
