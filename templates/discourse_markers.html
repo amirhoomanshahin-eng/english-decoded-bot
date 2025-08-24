@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Discourse Markers</title>
+  <script>
+    let startTime = Date.now();
+    const user_id = parseInt("{{ user_id }}");
+
+    function sendTimeSpent() {
+      let endTime = Date.now();
+      let duration = Math.floor((endTime - startTime) / 1000);
+      fetch("/log_time", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user_id, duration: duration })
+      });
+    }
+
+    window.addEventListener("beforeunload", sendTimeSpent);
+  </script>
+</head>
+<body>
+  <h1>📖 Discourse Markers</h1>
+  <p>Discourse markers are words or phrases that organize your speech and writing.</p>
+  <ul>
+    <li><b>Firstly</b> – introduces the first point.</li>
+    <li><b>However</b> – shows contrast.</li>
+    <li><b>Therefore</b> – shows result.</li>
+    <li><b>In conclusion</b> – signals the end.</li>
+  </ul>
+</body>
+</html>
