@@ -7,6 +7,20 @@ import sqlite3
 
 TOKEN = os.getenv("BOT_TOKEN")
 
+def init_db():
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS progress (
+            user_id INTEGER PRIMARY KEY,
+            lesson TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
+
 # Flask app to serve the mini app
 app = Flask(__name__)
 
