@@ -16,7 +16,7 @@ def index():
 # /start command for Telegram bot
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [KeyboardButton("📖 Discourse Markers", web_app=WebAppInfo(url="https://YOUR-RENDER-APP.onrender.com"))]
+        [KeyboardButton("📖 Discourse Markers", web_app=WebAppInfo(url="https://english-decoded-bot.onrender.com"))]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
