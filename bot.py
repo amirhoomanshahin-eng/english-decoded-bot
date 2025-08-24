@@ -3,8 +3,8 @@ import sqlite3
 import datetime
 import pytz
 from flask import Flask, render_template, request, jsonify
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 from threading import Thread
 
 TOKEN = os.getenv("BOT_TOKEN")
@@ -112,34 +112,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_text = "Welcome to *English Decoded*! 📚\n\nTap below to start your first lesson:"
 
     keyboard = [
-        [KeyboardButton("📖 Discourse Markers", web_app=WebAppInfo(
-            url=f"https://english-decoded-bot.onrender.com/lesson/discourse_markers/{user_id}"
-        ))],
-        [KeyboardButton("📊 My Progress")]
+        [InlineKeyboardButton(
+            "📖 Discourse Markers",
+            web_app=WebAppInfo(url=f"https://english-decoded-bot.onrender.com/lesson/discourse_markers/{user_id}")
+        )],
+        [InlineKeyboardButton("📊 My Progress", callback_data="my_progress")]
     ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
+    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         welcome_text,
         parse_mode="Markdown",
         reply_markup=reply_markup
-    )
-
-async def my_progress(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
-    minutes = get_weekly_time(user_id)
-    await update.message.reply_text(
-        f"⏳ This week (Sat–Fri, Tehran time), you’ve studied for *{minutes} minutes*."
-    )
-
-# ---------------- RUN BOTH ---------------- #
-def run_flask():
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
-if __name__ == "__main__":
-    Thread(target=run_flask).start()
-    application = ApplicationBuilder().token(TOKEN).build()
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.Regex("^📊 My Progress$"), my_progress))
-    application.run_polling()
