@@ -124,3 +124,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_text,
         parse_mode="Markdown",
         reply_markup=reply_markup
+    )
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    if query.data == "my_progress":
+        user_id = query.from_user.id
+        minutes = get_weekly_time(user_id)
+        await query.message.reply_text(
+            f"⏳ This week (Sat–Fri, Tehran time), you’ve studied for *{minutes} minutes*.",
+            parse_mode="Markdown"
+        )
+
+# ---------------- RUN BOTH ---------------- #
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+if __name__ == "__main__":
+    Thread(target=run_flask).start()
+    application = ApplicationBuilder().token(TOKEN).build()
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button_handler))
+    application.run_polling()
