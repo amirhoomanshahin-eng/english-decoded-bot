@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from threading import Thread
+import sqlite3
 
 TOKEN = os.getenv("BOT_TOKEN")
 
