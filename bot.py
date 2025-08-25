@@ -1,13 +1,11 @@
 import os
 import pytz
 import atexit
-from datetime import datetime, timedelta
 from threading import Thread
-
 from flask import Flask, render_template, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 
 # === Global Vars ===
 TOKEN = os.getenv("BOT_TOKEN")
@@ -90,8 +88,5 @@ if __name__ == "__main__":
     application = ApplicationBuilder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("progress", handle_buttons))
-    application.add_handler(
-        # also handle keyboard buttons
-        telegram.ext.MessageHandler(telegram.ext.filters.TEXT, handle_buttons)
-    )
+    application.add_handler(MessageHandler(filters.TEXT, handle_buttons))
     application.run_polling()
