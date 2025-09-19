@@ -26,8 +26,14 @@ button {
   color: white;
   font-size: 16px;
   cursor: pointer;
+  display: block;
+  width: 100%;
 }
 
 button:hover {
   background: #0088cc;
+}
+
+#page-content {
+  margin-top: 20px;
 }
