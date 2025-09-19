@@ -24,24 +24,3 @@ document.getElementById("fetchBtn").addEventListener("click", async () => {
     document.getElementById("response").innerText = "Error: " + err.message;
   }
 });
-
-// Simple client-side navigation
-function goToPage(page) {
-  const content = document.getElementById("page-content");
-
-  if (page === "discourse") {
-    content.innerHTML = `
-      <h2>📖 Discourse Markers</h2>
-      <p>Here you will find examples and explanations of discourse markers.</p>
-      <button onclick="goToPage('home')">⬅ Back</button>
-    `;
-  } else if (page === "resources") {
-    content.innerHTML = `
-      <h2>📚 Resources</h2>
-      <p>Here are some useful links and resources for learning.</p>
-      <button onclick="goToPage('home')">⬅ Back</button>
-    `;
-  } else {
-    content.innerHTML = "";
-  }
-}
