@@ -5,14 +5,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unit 13 - Multiple Choice</title>
   <link rel="stylesheet" href="../../../style.css">
+  <style>
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+    }
+    .options label {
+      display: block;
+      margin: 5px 0;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .correct { color: lightgreen; }
+    .wrong { color: #ff6666; }
+    .explanation {
+      margin-top: 8px;
+      font-style: italic;
+      color: #f0f0f0;
+      display: none;
+    }
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>📝 Unit 13 - Multiple Choice</h1>
-    <p>Here you can add your multiple-choice questions.</p>
+    <p>Answer all questions and press Submit.</p>
 
+    <form id="quizForm"></form>
+
+    <button type="button" id="submitBtn">Submit</button>
+    <button type="button" id="resetBtn">Reset</button>
     <br><br>
     <button onclick="location.href='index.html'">⬅ Back</button>
   </div>
+
+  <!-- Sounds -->
+  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+  <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-buzzer-2969.mp3"></audio>
+
+  <script>
+    // === Define Questions ===
+    const questions = [
+      {
+        text: "Question 1: Example text?",
+        options: ["A", "B", "C"],
+        correct: 1, // B
+        explanation: "Explanation for why B is correct."
+      },
+      {
+        text: "Question 2: Example text?",
+        options: ["A", "B", "C"],
+        correct: 0,
+        explanation: "Explanation for why A is correct."
+      },
+      {
+        text: "Question 3: Example text?",
+        options: ["A", "B", "C"],
+        correct: 2,
+        explanation: "Explanation for why C is correct."
+      },
+      {
+        text: "Question 4: Example text?",
+        options: ["A", "B", "C"],
+        correct: 1,
+        explanation: "Explanation for why B is correct."
+      },
+      {
+        text: "Question 5: Example text?",
+        options: ["A", "B", "C"],
+        correct: 0,
+        explanation: "Explanation for why A is correct."
+      },
+      {
+        text: "Question 6: Example text?",
+        options: ["A", "B", "C"],
+        correct: 2,
+        explanation: "Explanation for why C is correct."
+      },
+      {
+        text: "Question 7: Example text?",
+        options: ["A", "B", "C"],
+        correct: 1,
+        explanation: "Explanation for why B is correct."
+      },
+      {
+        text: "Question 8: Example text?",
+        options: ["A", "B", "C"],
+        correct: 0,
+        explanation: "Explanation for why A is correct."
+      }
+    ];
+
+    const quizForm = document.getElementById("quizForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const correctSound = document.getElementById("correctSound");
+    const wrongSound = document.getElementById("wrongSound");
+
+    const STORAGE_KEY = "unit13_answers";
+
+    // === Load Saved Answers ===
+    const savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+    // === Render Questions ===
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.id = `question-${i}`;
+
+      let html = `<p><strong>${q.text}</strong></p><div class="options">`;
+
+      q.options.forEach((opt, idx) => {
+        const checked = savedAnswers[i] === idx ? "checked" : "";
+        html += `
+          <label>
+            <input type="radio" name="q${i}" value="${idx}" ${checked} ${savedAnswers.submitted ? "disabled" : ""}>
+            ${opt}
+          </label>`;
+      });
+
+      html += `</div>
+        <div class="feedback hidden" id="feedback-${i}"></div>
+        <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+        <button type="button" class="checkBtn hidden" data-index="${i}">Check</button>
+      `;
+      div.innerHTML = html;
+      quizForm.appendChild(div);
+    });
+
+    // === Submit Handler ===
+    submitBtn.addEventListener("click", () => {
+      const formData = new FormData(quizForm);
+      const answers = {};
+      let unanswered = [];
+
+      questions.forEach((_, i) => {
+        if (formData.has("q" + i)) {
+          answers[i] = parseInt(formData.get("q" + i));
+        } else {
+          unanswered.push(i + 1);
+        }
+      });
+
+      if (unanswered.length > 0) {
+        alert("Please answer all questions. Missing: " + unanswered.join(", "));
+        return;
+      }
+
+      // Freeze answers
+      document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+      document.querySelectorAll(".checkBtn").forEach(btn => btn.classList.remove("hidden"));
+
+      // Save to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...answers, submitted: true }));
+    });
+
+    // === Reset Handler ===
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+
+    // === Check Answer Handler ===
+    quizForm.addEventListener("click", e => {
+      if (e.target.classList.contains("checkBtn")) {
+        const idx = parseInt(e.target.dataset.index);
+        const chosen = savedAnswers[idx];
+        const correct = questions[idx].correct;
+
+        const feedback = document.getElementById("feedback-" + idx);
+        const explanation = document.getElementById("explanation-" + idx);
+
+        if (chosen === correct) {
+          feedback.textContent = "✅ Correct! Great job!";
+          feedback.className = "feedback correct";
+          correctSound.play();
+        } else {
+          feedback.textContent = "❌ Wrong. The correct answer is: " + questions[idx].options[correct];
+          feedback.className = "feedback wrong";
+          wrongSound.play();
+        }
+
+        explanation.style.display = "block";
+      }
+    });
+  </script>
 </body>
 </html>
