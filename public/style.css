@@ -1,4 +1,6 @@
 /* === Global Styles === */
+
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -6,19 +8,18 @@ body {
   color: white;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  /* remove align-items: center */
+  min-height: 100vh; /* allow scrolling if taller */
 }
 
-/* === Container === */
+
 .container {
-  text-align: center;
+  text-align: left;          /* better for reading questions */
   background: rgba(0, 0, 0, 0.3);
   padding: 20px;
   border-radius: 15px;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  max-width: 600px;          /* a bit wider for quizzes */
+  margin: 20px auto;         /* add spacing from top */
 }
 
 /* === Headings === */
