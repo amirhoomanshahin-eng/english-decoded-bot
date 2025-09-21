@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 13 - Gap Filling</title>
+  <title>Unit 13 - Gap Filling Sentences</title>
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Unit 13 - Gap Filling Sentences</h1>
-    <p>Here you can add your gap filling exercises or download links.</p>
+    <h1>✍️ Unit 13 - Gap Filling</h1>
+    <p>Here you can add your gap-filling sentence exercises.</p>
 
-    <br>
-    <button onclick="location.href='exercises.html'">⬅ Back to Exercises</button>
+    <br><br>
+    <button onclick="location.href='index.html'">⬅ Back</button>
   </div>
 </body>
 </html>
