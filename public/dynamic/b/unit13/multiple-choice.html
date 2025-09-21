@@ -1,200 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 13 - Multiple Choice</title>
-  <link rel="stylesheet" href="../../../style.css">
-  <style>
-    .question {
-      margin-bottom: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-    }
-    .options label {
-      display: block;
-      margin: 5px 0;
-    }
-    .feedback {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    .correct { color: lightgreen; }
-    .wrong { color: #ff6666; }
-    .explanation {
-      margin-top: 8px;
-      font-style: italic;
-      color: #f0f0f0;
-      display: none;
-    }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📝 Unit 13 - Multiple Choice</h1>
-    <p>Answer all questions and press Submit.</p>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .question {
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+  }
+  .question p {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 17px;
+  }
+  .options {
+    margin-left: 15px;
+  }
+  .options label {
+    display: block;
+    margin: 4px 0;
+    cursor: pointer;
+  }
+  input[type="radio"][disabled] {
+    accent-color: #00bfff; /* keep colored circle */
+    cursor: not-allowed;
+  }
+  .chosen {
+    background: rgba(0,191,255,0.2);
+    border-radius: 6px;
+    padding: 3px;
+  }
+  .feedback {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  .correct { color: lightgreen; }
+  .wrong { color: #ff6666; }
+  .explanation {
+    margin-top: 8px;
+    font-style: italic;
+    color: #f0f0f0;
+    display: none;
+  }
+  .hidden { display: none; }
+</style>
 
-    <form id="quizForm"></form>
+<script>
+  const questions = [
+    { text: "Question 1: Example text?", options: ["A", "B", "C"], correct: 1, explanation: "Explanation for why B is correct." },
+    { text: "Question 2: Example text?", options: ["A", "B", "C"], correct: 0, explanation: "Explanation for why A is correct." },
+    { text: "Question 3: Example text?", options: ["A", "B", "C"], correct: 2, explanation: "Explanation for why C is correct." },
+    { text: "Question 4: Example text?", options: ["A", "B", "C"], correct: 1, explanation: "Explanation for why B is correct." },
+    { text: "Question 5: Example text?", options: ["A", "B", "C"], correct: 0, explanation: "Explanation for why A is correct." },
+    { text: "Question 6: Example text?", options: ["A", "B", "C"], correct: 2, explanation: "Explanation for why C is correct." },
+    { text: "Question 7: Example text?", options: ["A", "B", "C"], correct: 1, explanation: "Explanation for why B is correct." },
+    { text: "Question 8: Example text?", options: ["A", "B", "C"], correct: 0, explanation: "Explanation for why A is correct." }
+  ];
 
-    <button type="button" id="submitBtn">Submit</button>
-    <button type="button" id="resetBtn">Reset</button>
-    <br><br>
-    <button onclick="location.href='index.html'">⬅ Back</button>
-  </div>
+  const quizForm = document.getElementById("quizForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const resetBtn = document.getElementById("resetBtn");
 
-  <!-- Sounds -->
-  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
-  <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-buzzer-2969.mp3"></audio>
+  const correctSound = document.getElementById("correctSound");
+  const wrongSound = document.getElementById("wrongSound");
 
-  <script>
-    // === Define Questions ===
-    const questions = [
-      {
-        text: "Question 1: Example text?",
-        options: ["A", "B", "C"],
-        correct: 1, // B
-        explanation: "Explanation for why B is correct."
-      },
-      {
-        text: "Question 2: Example text?",
-        options: ["A", "B", "C"],
-        correct: 0,
-        explanation: "Explanation for why A is correct."
-      },
-      {
-        text: "Question 3: Example text?",
-        options: ["A", "B", "C"],
-        correct: 2,
-        explanation: "Explanation for why C is correct."
-      },
-      {
-        text: "Question 4: Example text?",
-        options: ["A", "B", "C"],
-        correct: 1,
-        explanation: "Explanation for why B is correct."
-      },
-      {
-        text: "Question 5: Example text?",
-        options: ["A", "B", "C"],
-        correct: 0,
-        explanation: "Explanation for why A is correct."
-      },
-      {
-        text: "Question 6: Example text?",
-        options: ["A", "B", "C"],
-        correct: 2,
-        explanation: "Explanation for why C is correct."
-      },
-      {
-        text: "Question 7: Example text?",
-        options: ["A", "B", "C"],
-        correct: 1,
-        explanation: "Explanation for why B is correct."
-      },
-      {
-        text: "Question 8: Example text?",
-        options: ["A", "B", "C"],
-        correct: 0,
-        explanation: "Explanation for why A is correct."
-      }
-    ];
+  const STORAGE_KEY = "unit13_answers";
 
-    const quizForm = document.getElementById("quizForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const resetBtn = document.getElementById("resetBtn");
+  let currentAnswers = {}; // will hold the answers in memory
 
-    const correctSound = document.getElementById("correctSound");
-    const wrongSound = document.getElementById("wrongSound");
+  // === Load Saved Answers ===
+  const savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
-    const STORAGE_KEY = "unit13_answers";
+  // === Render Questions ===
+  questions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.classList.add("question");
+    div.id = `question-${i}`;
 
-    // === Load Saved Answers ===
-    const savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    let html = `<p>${i + 1}. ${q.text}</p><div class="options">`;
 
-    // === Render Questions ===
-    questions.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.id = `question-${i}`;
-
-      let html = `<p><strong>${q.text}</strong></p><div class="options">`;
-
-      q.options.forEach((opt, idx) => {
-        const checked = savedAnswers[i] === idx ? "checked" : "";
-        html += `
-          <label>
-            <input type="radio" name="q${i}" value="${idx}" ${checked} ${savedAnswers.submitted ? "disabled" : ""}>
-            ${opt}
-          </label>`;
-      });
-
-      html += `</div>
-        <div class="feedback hidden" id="feedback-${i}"></div>
-        <div class="explanation" id="explanation-${i}">${q.explanation}</div>
-        <button type="button" class="checkBtn hidden" data-index="${i}">Check</button>
-      `;
-      div.innerHTML = html;
-      quizForm.appendChild(div);
+    q.options.forEach((opt, idx) => {
+      const checked = savedAnswers[i] === idx ? "checked" : "";
+      html += `
+        <label class="${checked ? 'chosen' : ''}">
+          <input type="radio" name="q${i}" value="${idx}" ${checked} ${savedAnswers.submitted ? "disabled" : ""}>
+          ${String.fromCharCode(65 + idx)}. ${opt}
+        </label>`;
     });
 
-    // === Submit Handler ===
-    submitBtn.addEventListener("click", () => {
-      const formData = new FormData(quizForm);
-      const answers = {};
-      let unanswered = [];
+    html += `</div>
+      <div class="feedback hidden" id="feedback-${i}"></div>
+      <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+      <button type="button" class="checkBtn hidden" data-index="${i}">Check</button>
+    `;
+    div.innerHTML = html;
+    quizForm.appendChild(div);
+  });
 
-      questions.forEach((_, i) => {
-        if (formData.has("q" + i)) {
-          answers[i] = parseInt(formData.get("q" + i));
-        } else {
-          unanswered.push(i + 1);
-        }
-      });
+  // === Restore Submitted State ===
+  if (savedAnswers.submitted) {
+    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+    document.querySelectorAll(".checkBtn").forEach(btn => btn.classList.remove("hidden"));
+    currentAnswers = savedAnswers; // reuse stored answers
+  }
 
-      if (unanswered.length > 0) {
-        alert("Please answer all questions. Missing: " + unanswered.join(", "));
-        return;
-      }
+  // === Submit Handler ===
+  submitBtn.addEventListener("click", () => {
+    const formData = new FormData(quizForm);
+    const answers = {};
+    let unanswered = [];
 
-      // Freeze answers
-      document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
-      document.querySelectorAll(".checkBtn").forEach(btn => btn.classList.remove("hidden"));
-
-      // Save to localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...answers, submitted: true }));
-    });
-
-    // === Reset Handler ===
-    resetBtn.addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    });
-
-    // === Check Answer Handler ===
-    quizForm.addEventListener("click", e => {
-      if (e.target.classList.contains("checkBtn")) {
-        const idx = parseInt(e.target.dataset.index);
-        const chosen = savedAnswers[idx];
-        const correct = questions[idx].correct;
-
-        const feedback = document.getElementById("feedback-" + idx);
-        const explanation = document.getElementById("explanation-" + idx);
-
-        if (chosen === correct) {
-          feedback.textContent = "✅ Correct! Great job!";
-          feedback.className = "feedback correct";
-          correctSound.play();
-        } else {
-          feedback.textContent = "❌ Wrong. The correct answer is: " + questions[idx].options[correct];
-          feedback.className = "feedback wrong";
-          wrongSound.play();
-        }
-
-        explanation.style.display = "block";
+    questions.forEach((_, i) => {
+      if (formData.has("q" + i)) {
+        answers[i] = parseInt(formData.get("q" + i));
+      } else {
+        unanswered.push(i + 1);
       }
     });
-  </script>
-</body>
-</html>
+
+    if (unanswered.length > 0) {
+      alert("Please answer all questions. Missing: " + unanswered.join(", "));
+      return;
+    }
+
+    // Freeze answers
+    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+
+    // Highlight chosen options
+    document.querySelectorAll(".options label").forEach(label => {
+      if (label.querySelector("input").checked) {
+        label.classList.add("chosen");
+      }
+    });
+
+    document.querySelectorAll(".checkBtn").forEach(btn => btn.classList.remove("hidden"));
+
+    // Save to localStorage
+    currentAnswers = { ...answers, submitted: true };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentAnswers));
+  });
+
+  // === Reset Handler ===
+  resetBtn.addEventListener("click",
