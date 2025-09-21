@@ -87,6 +87,8 @@
       color: #f0f0f0;
       display: none;
     }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -107,7 +109,6 @@
   </div>
 
   <script>
-    // Example questions (replace with your real ones)
     const questions = [
       { text: "Question 1: Example text?", options: ["Option A", "Option B", "Option C"], correct: 0, explanation: "A is correct because ..." },
       { text: "Question 2: Another example?", options: ["Option A", "Option B", "Option C"], correct: 2, explanation: "C is correct because ..." },
@@ -125,7 +126,6 @@
     const correctSound = document.getElementById("correctSound");
     const wrongSound = document.getElementById("wrongSound");
 
-    // Load saved answers
     let savedAnswers = JSON.parse(localStorage.getItem("unit13_mcq")) || { answers: [], submitted: false };
 
     // Render questions
@@ -204,7 +204,7 @@
           feedback.className = "feedback correct";
           correctSound.play();
         } else {
-          feedback.textContent = "❌ Wrong!";
+          feedback.textContent = "❌ Wrong! Correct: " + questions[i].options[questions[i].correct];
           feedback.className = "feedback wrong";
           wrongSound.play();
         }
@@ -212,13 +212,6 @@
         explanation.style.display = "block";
       });
     });
-
-    // Restore submitted state
-    if (savedAnswers.submitted) {
-      submitBtn.disabled = true;
-      document.querySelectorAll(".checkBtn").forEach(btn => btn.classList.remove("hidden"));
-      quizForm.querySelectorAll("input[type=radio]").forEach(el => el.disabled = true);
-    }
   </script>
 </body>
 </html>
