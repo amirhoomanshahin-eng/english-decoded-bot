@@ -143,4 +143,32 @@
   });
 
   // === Reset Handler ===
-  resetBtn.addEventListener("click",
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  // === Check Answer Handler ===
+  quizForm.addEventListener("click", e => {
+    if (e.target.classList.contains("checkBtn")) {
+      const idx = parseInt(e.target.dataset.index);
+      const chosen = currentAnswers[idx];
+      const correct = questions[idx].correct;
+
+      const feedback = document.getElementById("feedback-" + idx);
+      const explanation = document.getElementById("explanation-" + idx);
+
+      if (chosen === correct) {
+        feedback.textContent = "✅ Correct! Great job!";
+        feedback.className = "feedback correct";
+        correctSound.play();
+      } else {
+        feedback.textContent = "❌ Wrong. The correct answer is: " + questions[idx].options[correct];
+        feedback.className = "feedback wrong";
+        wrongSound.play();
+      }
+
+      explanation.style.display = "block";
+    }
+  });
+</script>
