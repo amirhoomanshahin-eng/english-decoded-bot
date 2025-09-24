@@ -1,1 +1,216 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unit 14 – Multiple Choice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(to bottom right, #0088cc, #005577);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.container {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 15px;
+}
+h1 { text-align: center; margin-bottom: 20px; }
+.question {
+  margin-bottom: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+}
+.question p {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  text-align: justify; /* ✅ Justify questions */
+}
+.options { margin-left: 15px; }
+.options label { display: block; margin: 6px 0; cursor: pointer; }
+input[type="radio"] { accent-color: #00bfff; }
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #00bfff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+button:hover { background: #0088cc; }
+
+.feedback { margin-top: 10px; font-weight: bold; }
+.correct { color: lightgreen; }
+.wrong { color: #ff6666; }
+.explanation {
+  margin-top: 8px;
+  font-style: italic;
+  color: #f0f0f0;
+  display: none;
+  text-align: justify; /* ✅ Justify explanations */
+}
+.hidden { display: none; }
+
+/* Highlighting selected answers */
+.options label.correct { background: rgba(144,238,144,0.5); border-radius:6px; padding:3px; }
+.options label.wrong { background: rgba(255,99,71,0.5); border-radius:6px; padding:3px; }
+@keyframes glow { 0% { box-shadow:0 0 5px #00ff00;} 50% { box-shadow:0 0 15px #00ff00;} 100% { box-shadow:0 0 5px #00ff00;} }
+.options label.correct.glow { animation: glow 1s ease-in-out; }
+
+/* Confetti container */
+#confetti { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:hidden; z-index:9999; }
+.confetti-piece { position: absolute; width: 10px; height: 10px; background: #ffff00; opacity:0.8; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Unit 14 – Multiple Choice</h1>
+  <form id="quizForm"></form>
+  <button type="button" id="submitBtn">Submit</button>
+  <button type="button" id="resetBtn">Reset</button>
+  <button type="button" onclick="history.back()">⬅ Back</button>
+
+  <audio id="correctSound" src="../../../sounds/correct.mp3"></audio>
+  <audio id="wrongSound" src="../../../sounds/wrong.mp3"></audio>
+</div>
+
+<!-- Confetti container -->
+<div id="confetti"></div>
+
+<script>
+const questions = [
+  { text:"The discovery of penicillin was a monumental __________ in medicine, saving countless lives.", options:["breakthrough","pesticide","contamination"], correct:0, explanation:"A 'breakthrough' is a significant and important discovery or development." },
+  { text:"The farmer sprayed a __________ to protect the lettuce from being eaten by insects.", options:["malnutrition","pesticide","fortification"], correct:1, explanation:"A 'pesticide' is a substance used to destroy organisms harmful to cultivated plants." },
+  { text:"__________ is a genetically modified crop that produces a toxin harmful to specific insects, reducing the need for spraying.", options:["Bt corn","Synthetic corn","Frankenfood"], correct:0, explanation:"'Bt corn' is the specific name for this type of genetically engineered corn." },
+  { text:"This particular chemical is an __________, meaning it is designed specifically to kill insects.", options:["insecticide","antibiotic","herbicide"], correct:0, explanation:"The suffix '-cide' means to kill, and 'insecti-' specifies the target." },
+  { text:"In many countries, milk is __________ with Vitamin D to help improve public health.", options:["fortified","synthetic","resistant"], correct:0, explanation:"To 'fortify' means to strengthen or enhance, often by adding nutrients." },
+  { text:"The charity's main goal is to fight __________ by providing nutrient-rich food to children in need.", options:["patents","malnutrition","contamination"], correct:1, explanation:"'Malnutrition' is the condition resulting from a lack of proper nutrition." },
+  { text:"This jacket is made from a __________ material that is designed to be waterproof and more durable than natural fibers.", options:["sustainable","unethical","synthetic"], correct:2, explanation:"'Synthetic' means made by chemical synthesis, especially to imitate a natural product." },
+  { text:"Food processors must be careful to avoid __________, such as peanuts accidentally getting into other products, as it can cause severe allergic reactions.", options:["cross contamination","fear mongering","breakthroughs"], correct:0, explanation:"'Cross contamination' is the unintentional transfer of substances from one object to another." },
+  { text:"Using solar and wind power is a key part of creating a __________ energy future for our planet.", options:["sustainable","unethical","resistant"], correct:0, explanation:"'Sustainable' describes methods that can be maintained without damaging the environment." },
+  { text:"Critics who dislike genetic modification often use the term '__________' to suggest these foods are unnatural and frightening.", options:["fortified food","frankenfood","sustainable food"], correct:1, explanation:"'Frankenfood' is a derogatory term for GM food, combining 'Frankenstein' and 'food'." },
+  { text:"The politician was accused of __________ after making exaggerated claims about the dangers of the new technology without evidence.", options:["fear mongering","cross contamination","patenting"], correct:0, explanation:"'Fear mongering' is the action of deliberately arousing public fear or alarm." },
+  { text:"The company filed for __________ to protect its new invention and prevent others from copying it for 20 years.", options:["pesticides","patents","breakthroughs"], correct:1, explanation:"'Patents' are exclusive rights granted for an invention." },
+  { text:"Many people believe that testing products on animals is completely __________ and should be banned.", options:["synthetic","sustainable","unethical"], correct:2, explanation:"'Unethical' means not morally correct or acceptable." },
+  { text:"As climate change causes more water scarcity, farmers need __________ crops to ensure a reliable harvest.", options:["drought resistant","pro-organic","fortified"], correct:0, explanation:"'Drought resistant' means able to survive periods of low water supply." },
+  { text:"The __________ scientists presented data showing how GM crops can lead to higher yields and reduce hunger.", options:["pro-organic","pro-GM","unethical"], correct:1, explanation:"'Pro-GM' means in support of GM technology." },
+  { text:"__________ farmers avoid using synthetic pesticides and fertilizers, relying instead on natural methods.", options:["Pro-GM","Pro-Organic","Drought resistant"], correct:1, explanation:"'Pro-Organic' refers to those who support and practice organic farming." }
+];
+
+const quizForm = document.getElementById("quizForm");
+const submitBtn = document.getElementById("submitBtn");
+const resetBtn = document.getElementById("resetBtn");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const confettiContainer = document.getElementById("confetti");
+
+let savedState = JSON.parse(localStorage.getItem("unit14_mcq")) || { answers:[], submitted:false, checked:{} };
+
+// Render questions
+questions.forEach((q,i)=>{
+  const div=document.createElement("div");
+  div.classList.add("question"); div.id=`question-${i}`;
+  let html=`<p>${i+1}. ${q.text}</p><div class="options">`;
+  q.options.forEach((opt,idx)=>{
+    const checked = savedState.answers[i]===idx?"checked":"";
+    html+=`<label><input type="radio" name="q${i}" value="${idx}" ${checked} ${savedState.submitted?"disabled":""}>${String.fromCharCode(65+idx)}. ${opt}</label>`;
+  });
+  html+=`</div><div class="feedback hidden" id="feedback-${i}"></div>
+  <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+  <button type="button" class="checkBtn hidden" data-index="${i}">Check</button>`;
+  div.innerHTML=html; quizForm.appendChild(div);
+});
+
+// Submit
+submitBtn.addEventListener("click",()=>{
+  let answers=[],unanswered=[];
+  questions.forEach((_,i)=>{
+    const sel=quizForm.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel){ unanswered.push(i+1); } else { answers[i]=parseInt(sel.value); }
+  });
+  if(unanswered.length>0){ alert("Please answer all questions: "+unanswered.join(", ")); return; }
+  savedState.answers=answers;
+  savedState.submitted=true;
+  localStorage.setItem("unit14_mcq",JSON.stringify(savedState));
+  quizForm.querySelectorAll("input[type=radio]").forEach(el=>el.disabled=true);
+  document.querySelectorAll(".checkBtn").forEach(btn=>btn.classList.remove("hidden"));
+  submitBtn.disabled=true;
+});
+
+// Reset
+resetBtn.addEventListener("click",()=>{ localStorage.removeItem("unit14_mcq"); location.reload(); });
+
+// Confetti
+function launchConfetti(){
+  for(let i=0;i<30;i++){
+    const div=document.createElement("div");
+    div.className="confetti-piece";
+    div.style.left=Math.random()*100+"%";
+    div.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    div.style.animation=`fall ${1+Math.random()*2}s linear`;
+    confettiContainer.appendChild(div);
+    setTimeout(()=>div.remove(),2000);
+  }
+}
+
+// Check button
+function handleCheck(i){
+  const selected=savedState.answers[i];
+  const correctIndex=questions[i].correct;
+  const feedback=document.getElementById(`feedback-${i}`);
+  const explanation=document.getElementById(`explanation-${i}`);
+  const labels=quizForm.querySelectorAll(`#question-${i} .options label`);
+
+  labels.forEach((label,idx)=>{
+    label.classList.remove("correct","wrong","glow");
+    if(idx===selected && idx===correctIndex){
+      label.classList.add("correct","glow");
+      feedback.textContent="✅ Correct!";
+      feedback.className="feedback correct";
+      correctSound.play();
+      launchConfetti();
+    } else if(idx===selected && idx!==correctIndex){
+      label.classList.add("wrong");
+      feedback.textContent="❌ Wrong!";
+      feedback.className="feedback wrong";
+      wrongSound.play();
+    }
+    if(idx===correctIndex){ label.classList.add("correct"); }
+  });
+
+  explanation.style.display="block";
+  savedState.checked[i]=true;
+  localStorage.setItem("unit14_mcq",JSON.stringify(savedState));
+}
+
+// Attach check handlers
+document.querySelectorAll(".checkBtn").forEach(btn=>{
+  btn.addEventListener("click",e=>handleCheck(parseInt(e.target.dataset.index)));
+});
+
+// Restore state
+if(savedState.submitted){
+  submitBtn.disabled=true;
+  quizForm.querySelectorAll("input[type=radio]").forEach(el=>el.disabled=true);
+  document.querySelectorAll(".checkBtn").forEach(btn=>btn.classList.remove("hidden"));
+  Object.keys(savedState.checked).forEach(k=>{
+    if(savedState.checked[k]) handleCheck(parseInt(k));
+  });
+}
+</script>
+</body>
+</html>
