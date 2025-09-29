@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unit 14 - Gap Filling</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../../../style.css">
+<style>
+body { font-family: Arial, sans-serif; background: #f0f8ff; padding: 20px; }
+.container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; }
+h1 { text-align: center; }
+h2 { margin-top: 30px; }
+.question { margin-bottom: 20px; }
+input[type=text] { width: 70%; padding: 5px; margin-top: 5px; }
+button { margin-top: 10px; padding: 8px 15px; }
+.feedback { font-weight: bold; margin-top: 10px; }
+.correct { color: green; }
+.wrong { color: red; }
+.explanation { display: none; margin-top: 5px; font-style: italic; color: #333; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Unit 14 – Gap Filling</h1>
+
+  <h2>Section A: Vocabulary 1–8</h2>
+  <form id="sectionAForm">
+    <div class="question">
+      1. The development of a new, highly effective vaccine was a major scientific <input type="text" name="q1">
+      <div class="explanation" id="expA1">Answer: breakthrough — A 'breakthrough' is a significant and important discovery or development.</div>
+    </div>
+    <div class="question">
+      2. Farmers often use <input type="text" name="q2"> to protect their crops from insects.
+      <div class="explanation" id="expA2">Answer: pesticide — A substance used to destroy pests.</div>
+    </div>
+    <div class="question">
+      3. <input type="text" name="q3"> is a specific type of GM crop that produces its own insecticide.
+      <div class="explanation" id="expA3">Answer: Bt corn — A GM corn producing its own insecticide.</div>
+    </div>
+    <div class="question">
+      4. Because it targets bugs, this substance is classified as a(n) <input type="text" name="q4">
+      <div class="explanation" id="expA4">Answer: insecticide — A pesticide targeting insects.</div>
+    </div>
+    <div class="question">
+      5. This breakfast cereal is <input type="text" name="q5"> with vitamins and iron.
+      <div class="explanation" id="expA5">Answer: fortified — Strengthened by adding nutrients.</div>
+    </div>
+    <div class="question">
+      6. In many countries, <input type="text" name="q6"> is a serious problem caused by lack of nutrients.
+      <div class="explanation" id="expA6">Answer: malnutrition — Lack of proper nutrition.</div>
+    </div>
+    <div class="question">
+      7. Nylon is a <input type="text" name="q7"> material; made by chemical processes.
+      <div class="explanation" id="expA7">Answer: synthetic — Made artificially, not naturally.</div>
+    </div>
+    <div class="question">
+      8. To avoid <input type="text" name="q8"> between nuts and other foods, strict cleaning is needed.
+      <div class="explanation" id="expA8">Answer: cross contamination — Unintentional transfer of substances.</div>
+    </div>
+
+    <button type="button" onclick="submitSection('A')">Submit Section A</button>
+    <button type="button" onclick="resetSection('A')">Reset Section A</button>
+    <div id="feedbackA" class="feedback"></div>
+  </form>
+
+  <h2>Section B: Vocabulary 9–16</h2>
+  <form id="sectionBForm">
+    <div class="question">
+      1. We need to find more <input type="text" name="q1"> farming methods that do not harm the environment.
+      <div class="explanation" id="expB1">Answer: sustainable — Methods maintained long-term without harm.</div>
+    </div>
+    <div class="question">
+      2. Critics call GM products "<input type="text" name="q2">" to suggest they are unnatural.
+      <div class="explanation" id="expB2">Answer: frankenfood — Derogatory term for GM food.</div>
+    </div>
+    <div class="question">
+      3. The article wasn't based on facts; it was pure <input type="text" name="q3"> designed to scare people.
+      <div class="explanation" id="expB3">Answer: fear mongering — Deliberately causing fear.</div>
+    </div>
+    <div class="question">
+      4. Large companies hold the <input type="text" name="q4"> on GM seeds.
+      <div class="explanation" id="expB4">Answer: patents — Exclusive legal rights.</div>
+    </div>
+    <div class="question">
+      5. Many people believe it is <input type="text" name="q5"> to patent living organisms.
+      <div class="explanation" id="expB5">Answer: unethical — Not morally acceptable.</div>
+    </div>
+    <div class="question">
+      6. Scientists are developing <input type="text" name="q6"> crops that grow with very little water.
+      <div class="explanation" id="expB6">Answer: drought resistant — Able to survive low water.</div>
+    </div>
+    <div class="question">
+      7. The <input type="text" name="q7"> scientists argued GM crops could solve world hunger.
+      <div class="explanation" id="expB7">Answer: pro-GM — In support of GM technology.</div>
+    </div>
+    <div class="question">
+      8. The <input type="text" name="q8"> activists promoted organic farming practices.
+      <div class="explanation" id="expB8">Answer: pro-Organic — Advocates organic agriculture.</div>
+    </div>
+
+    <button type="button" onclick="submitSection('B')">Submit Section B</button>
+    <button type="button" onclick="resetSection('B')">Reset Section B</button>
+    <div id="feedbackB" class="feedback"></div>
+  </form>
+</div>
+
+<script>
+// Save user input in localStorage
+function submitSection(section) {
+  const form = document.getElementById(`section${section}Form`);
+  let correctCount = 0;
+  for (let i = 1; i <= 8; i++) {
+    const input = form.querySelector(`input[name="q${i}"]`);
+    const exp = document.getElementById(`exp${section}${i}`);
+    const answer = exp.textContent.split(' — ')[0].replace('Answer: ', '').trim();
+    if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+      input.style.borderColor = 'green';
+      correctCount++;
+    } else {
+      input.style.borderColor = 'red';
+    }
+    exp.style.display = 'block';
+  }
+  localStorage.setItem(`unit14_section${section}`, JSON.stringify([...form.querySelectorAll('input')].map(i=>i.value)));
+  document.getElementById(`feedback${section}`).textContent = `You got ${correctCount}/8 correct`;
+}
+
+function resetSection(section) {
+  const form = document.getElementById(`section${section}Form`);
+  form.querySelectorAll('input').forEach(i => { i.value = ''; i.style.borderColor = ''; });
+  form.querySelectorAll('.explanation').forEach(exp => exp.style.display = 'none');
+  document.getElementById(`feedback${section}`).textContent = '';
+  localStorage.removeItem(`unit14_section${section}`);
+}
+
+// Restore previous answers
+['A','B'].forEach(section=>{
+  const saved = JSON.parse(localStorage.getItem(`unit14_section${section}`));
+  if(saved){
+    const form = document.getElementById(`section${section}Form`);
+    form.querySelectorAll('input').forEach((i,idx)=>{ i.value = saved[idx]; });
+  }
+});
+</script>
+</body>
+</html>
