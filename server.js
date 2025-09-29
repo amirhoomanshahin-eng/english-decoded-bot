@@ -1,71 +1,75 @@
 import express from "express";
 import path from "path";
-import bodyParser from "body-parser";
-import OpenAI from "openai";
+import fetch from "node-fetch";  // or use built-in fetch in newer Node versions
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "public")));
 
-// 🔑 Setup OpenAI client (make sure OPENAI_API_KEY is set in Render/Telegram env vars)
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Example test API
+// Example route
 app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
+  res.json({ message: "Hello from backend with DeepSeek integration!" });
 });
 
-// ✅ AI check endpoint
+// DeepSeek check endpoint
 app.post("/api/check-example", async (req, res) => {
   const { example } = req.body;
-
   if (!example) {
     return res.status(400).json({ error: "No example provided" });
   }
 
   try {
-    // Ask OpenAI if the sentence correctly uses "above all"
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful English teacher. Check if a student's sentence uses 'above all' correctly. Be strict but encouraging. Return JSON with fields: correct (true/false) and explanation."
-        },
-        {
-          role: "user",
-          content: `Here is the student's sentence: "${example}"`
-        }
-      ],
-      temperature: 0.3,
-    });
-
-    // Parse AI response
-    let result;
-    try {
-      result = JSON.parse(response.choices[0].message.content);
-    } catch {
-      // fallback: return as plain explanation
-      result = {
-        correct: false,
-        explanation: response.choices[0].message.content,
-      };
+    // Use your DeepSeek API key
+    const deepseekKey = process.env.DEEPSEEK_API_KEY;
+    if (!deepseekKey) {
+      return res.status(500).json({ error: "DeepSeek API key not configured" });
     }
 
-    res.json(result);
+    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${deepseekKey}`
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat", 
+        messages: [
+          {
+            role: "system",
+            content: "You are an English teacher. Check whether the student’s sentence uses ‘above all’ correctly, and explain if it's right or wrong."
+          },
+          {
+            role: "user",
+            content: example
+          }
+        ],
+        temperature: 0.3
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`DeepSeek error: ${errText}`);
+    }
+
+    const data = await response.json();
+
+    // Depending on how DeepSeek returns, extract correct/explanation
+    // For example, assuming it returns something like:
+    // { choices: [ { message: { content: "..." } } ], ... }
+    const content = data.choices[0].message.content;
+    // You may format or parse content if the model returns JSON
+    // For simplicity, we can just send that content string
+    return res.json({ explanation: content });
 
   } catch (err) {
-    console.error("Error checking example:", err);
-    res.status(500).json({ error: "AI check failed" });
+    console.error(err);
+    res.status(500).json({ error: "DeepSeek API request failed" });
   }
 });
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
