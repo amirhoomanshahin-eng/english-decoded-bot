@@ -1,73 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discourse Marker: Above All</title>
-<link rel="stylesheet" href="../../style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Above All</title>
+  <link rel="stylesheet" href="../../style.css">
+  <script defer src="discourse.js"></script>
 </head>
 <body>
-<div class="container">
-  <h1>1 – Above All</h1>
-  <p><strong>Meaning:</strong> "Above all" is used to highlight the most important point or idea in a sentence.</p>
+  <div class="container">
+    <h1>✨ Above All</h1>
+    <p>
+      <b>Meaning:</b> "Above all" is used to emphasize the most important point.  
+      Example: <i>“Above all, stay calm in difficult situations.”</i>
+    </p>
 
-  <label for="userSentence">Write an example sentence using "above all":</label>
-  <textarea id="userSentence" rows="3" style="width:100%;"></textarea>
+    <h3>📝 Your Example</h3>
+    <textarea id="userExample" rows="4" placeholder="Write your own sentence using 'above all'..."></textarea>
+    <br><br>
+    <button id="checkBtn">Check with AI</button>
+    <button id="resetBtn">Reset</button>
 
-  <button id="checkBtn">Check Sentence</button>
-  <button id="resetBtn">Reset</button>
+    <div id="feedback" class="feedback"></div>
 
-  <div id="result" style="margin-top:10px;"></div>
-</div>
-
-<script>
-const textarea = document.getElementById('userSentence');
-const checkBtn = document.getElementById('checkBtn');
-const resetBtn = document.getElementById('resetBtn');
-const resultDiv = document.getElementById('result');
-
-// Load previous example if exists
-const savedData = JSON.parse(localStorage.getItem('aboveAllExample'));
-if(savedData){
-  textarea.value = savedData.sentence;
-  resultDiv.innerHTML = `<strong>${savedData.result.toUpperCase()}:</strong> ${savedData.explanation}`;
-}
-
-// Check sentence
-checkBtn.addEventListener('click', async () => {
-  const sentence = textarea.value.trim();
-  if(!sentence){
-    alert("Please write a sentence first.");
-    return;
-  }
-
-  resultDiv.textContent = "Checking...";
-  try{
-    const res = await fetch('/check-above-all', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sentence })
-    });
-
-    const data = await res.json();
-
-    // Show result
-    resultDiv.innerHTML = `<strong>${data.result.toUpperCase()}:</strong> ${data.explanation}`;
-
-    // Save to localStorage
-    localStorage.setItem('aboveAllExample', JSON.stringify({ sentence, ...data }));
-
-  } catch(e){
-    resultDiv.textContent = "Error checking the sentence. Try again.";
-  }
-});
-
-// Reset
-resetBtn.addEventListener('click', () => {
-  textarea.value = '';
-  resultDiv.textContent = '';
-  localStorage.removeItem('aboveAllExample');
-});
-</script>
+    <br><br>
+    <button onclick="location.href='0-index.html'">⬅ Back</button>
+  </div>
 </body>
 </html>
