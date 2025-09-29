@@ -1,75 +1,58 @@
 import express from "express";
 import path from "path";
-import fetch from "node-fetch";  // or use built-in fetch in newer Node versions
+import fetch from "node-fetch"; // for API calls
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// Serve static frontend
 app.use(express.static(path.join(process.cwd(), "public")));
+app.use(express.json());
 
-// Example route
+// Hugging Face API setup
+const HF_API_KEY = process.env.HF_API_KEY; // save your token in env variable
+const MODEL = "google/flan-t5-large";
+
+// Example backend API route
 app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend with DeepSeek integration!" });
+  res.json({ message: "Hello from backend!" });
 });
 
-// DeepSeek check endpoint
-app.post("/api/check-example", async (req, res) => {
-  const { example } = req.body;
-  if (!example) {
-    return res.status(400).json({ error: "No example provided" });
+// Sentence checking route
+app.post("/api/check-sentence", async (req, res) => {
+  const { sentence } = req.body;
+
+  if (!sentence) {
+    return res.status(400).json({ error: "No sentence provided" });
   }
 
-  try {
-    // Use your DeepSeek API key
-    const deepseekKey = process.env.DEEPSEEK_API_KEY;
-    if (!deepseekKey) {
-      return res.status(500).json({ error: "DeepSeek API key not configured" });
-    }
+  // Prepare prompt for the model
+  const prompt = `Check if the following sentence uses the discourse marker "above all" correctly. 
+Explain if it is correct or not, and why. Give a short explanation:\n\n"${sentence}"`;
 
-    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+  try {
+    const response = await fetch(`https://api-inference.huggingface.co/models/${MODEL}`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${HF_API_KEY}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${deepseekKey}`
       },
-      body: JSON.stringify({
-        model: "deepseek-chat", 
-        messages: [
-          {
-            role: "system",
-            content: "You are an English teacher. Check whether the student’s sentence uses ‘above all’ correctly, and explain if it's right or wrong."
-          },
-          {
-            role: "user",
-            content: example
-          }
-        ],
-        temperature: 0.3
-      })
+      body: JSON.stringify({ inputs: prompt, options: { wait_for_model: true } }),
     });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`DeepSeek error: ${errText}`);
-    }
 
     const data = await response.json();
 
-    // Depending on how DeepSeek returns, extract correct/explanation
-    // For example, assuming it returns something like:
-    // { choices: [ { message: { content: "..." } } ], ... }
-    const content = data.choices[0].message.content;
-    // You may format or parse content if the model returns JSON
-    // For simplicity, we can just send that content string
-    return res.json({ explanation: content });
+    // Hugging Face returns an array of generated texts
+    const result = Array.isArray(data) && data[0]?.generated_text ? data[0].generated_text : "No response from model";
 
+    res.json({ result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DeepSeek API request failed" });
+    res.status(500).json({ error: "AI request failed" });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
