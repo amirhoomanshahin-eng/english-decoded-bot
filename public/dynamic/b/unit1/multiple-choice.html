@@ -1,1 +1,232 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic B - Unit 1 Multiple Choice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fdfdfd;
+    }
+    .options label {
+      display: block;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+    .explanation {
+      margin-top: 10px;
+      padding: 10px;
+      border-left: 3px solid #007bff;
+      background: #eef5ff;
+      display: none;
+      text-align: justify;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin: 10px 5px 0 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-submit { background: #28a745; color: #fff; }
+    .btn-reset { background: #dc3545; color: #fff; }
+    .btn-back { background: #6c757d; color: #fff; }
+    .correct { color: green; font-weight: bold; }
+    .incorrect { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📘 Dynamic English B - Unit 1: Multiple Choice</h1>
+
+    <form id="quizForm">
+      <!-- Q1 -->
+      <div class="question" data-answer="c">
+        <p>1. Despite his excellent qualifications, the hiring manager made a ___________ based on his unusual hobby listed on the CV and decided not to interview him.</p>
+        <div class="options">
+          <label><input type="radio" name="q1" value="a"> A) good fit</label>
+          <label><input type="radio" name="q1" value="b"> B) unconscious bias</label>
+          <label><input type="radio" name="q1" value="c"> C) snap judgment</label>
+        </div>
+        <div class="explanation">✅ Correct: C) snap judgment.<br>A quick, ill-considered decision based on a superficial detail.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question" data-answer="a">
+        <p>2. We need to hire someone who is not only skilled but also a ___________ for our company's collaborative and informal culture.</p>
+        <div class="options">
+          <label><input type="radio" name="q2" value="a"> A) good fit</label>
+          <label><input type="radio" name="q2" value="b"> B) aesthetic labor</label>
+          <label><input type="radio" name="q2" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: A) good fit.<br>Refers to compatibility with workplace culture beyond skills.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question" data-answer="b">
+        <p>3. Flight attendants, receptionists, and models are often expected to perform ___________, meaning they must maintain a specific appearance and demeanor as part of their job.</p>
+        <div class="options">
+          <label><input type="radio" name="q3" value="a"> A) cognitive biases</label>
+          <label><input type="radio" name="q3" value="b"> B) aesthetic labor</label>
+          <label><input type="radio" name="q3" value="c"> C) snap judgment</label>
+        </div>
+        <div class="explanation">✅ Correct: B) aesthetic labor.<br>Work requiring employees to manage their looks and style.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question" data-answer="a">
+        <p>4. The fact that taller people are statistically more likely to become CEOs is often cited as an example of ___________ in the corporate world.</p>
+        <div class="options">
+          <label><input type="radio" name="q4" value="a"> A) lookism</label>
+          <label><input type="radio" name="q4" value="b"> B) a good fit</label>
+          <label><input type="radio" name="q4" value="c"> C) unconscious bias</label>
+        </div>
+        <div class="explanation">✅ Correct: A) lookism.<br>Discrimination or prejudice based on physical appearance.</div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question" data-answer="b">
+        <p>5. She genuinely believes she treats all applicants equally, but her ___________ causes her to favor graduates from her own alma mater without her realizing it.</p>
+        <div class="options">
+          <label><input type="radio" name="q5" value="a"> A) snap judgment</label>
+          <label><input type="radio" name="q5" value="b"> B) unconscious bias</label>
+          <label><input type="radio" name="q5" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: B) unconscious bias.<br>Subconscious stereotype influencing decisions without awareness.</div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="question" data-answer="b">
+        <p>6. Confirmation bias, where we only pay attention to information that supports our existing beliefs, is a common type of ___________.</p>
+        <div class="options">
+          <label><input type="radio" name="q6" value="a"> A) aesthetic labor</label>
+          <label><input type="radio" name="q6" value="b"> B) cognitive biases</label>
+          <label><input type="radio" name="q6" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: B) cognitive biases.<br>Mental shortcuts that can lead to systematic errors in judgment.</div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="question" data-answer="a">
+        <p>7. The company's policy requires strict professional dress codes and specific grooming standards, enforcing a form of ___________ on its employees.</p>
+        <div class="options">
+          <label><input type="radio" name="q7" value="a"> A) aesthetic labor</label>
+          <label><input type="radio" name="q7" value="b"> B) a good fit</label>
+          <label><input type="radio" name="q7" value="c"> C) unconscious bias</label>
+        </div>
+        <div class="explanation">✅ Correct: A) aesthetic labor.<br>Employees must manage appearance as a condition of employment.</div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="question" data-answer="b">
+        <p>8. During the speed-dating event, people had to make ___________ about their potential partners after talking for only three minutes.</p>
+        <div class="options">
+          <label><input type="radio" name="q8" value="a"> A) cognitive biases</label>
+          <label><input type="radio" name="q8" value="b"> B) snap judgments</label>
+          <label><input type="radio" name="q8" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: B) snap judgments.<br>Quick, often superficial decisions made under time pressure.</div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="question" data-answer="a">
+        <p>9. The hiring team was trained to recognize their _________, such as the tendency to prefer candidates with similar hobbies or backgrounds.</p>
+        <div class="options">
+          <label><input type="radio" name="q9" value="a"> A) unconscious biases</label>
+          <label><input type="radio" name="q9" value="b"> B) aesthetic labor</label>
+          <label><input type="radio" name="q9" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: A) unconscious biases.<br>Automatic preferences or stereotypes formed outside awareness.</div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="question" data-answer="c">
+        <p>10. The law against ___________ is intended to prevent discrimination in hiring based on physical attractiveness, weight, or other aspects of appearance.</p>
+        <div class="options">
+          <label><input type="radio" name="q10" value="a"> A) a good fit</label>
+          <label><input type="radio" name="q10" value="b"> B) snap judgment</label>
+          <label><input type="radio" name="q10" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: C) lookism.<br>Formal discrimination based on looks or appearance.</div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="question" data-answer="a">
+        <p>11. Our brains use ___________ to process information quickly, but they can often lead to serious errors in judgment.</p>
+        <div class="options">
+          <label><input type="radio" name="q11" value="a"> A) cognitive biases</label>
+          <label><input type="radio" name="q11" value="b"> B) a good fit</label>
+          <label><input type="radio" name="q11" value="c"> C) aesthetic labor</label>
+        </div>
+        <div class="explanation">✅ Correct: A) cognitive biases.<br>Mental shortcuts that are efficient but flawed.</div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="question" data-answer="b">
+        <p>12. He wasn't the most experienced candidate, but his positive attitude and team-oriented mindset made him a ___________ for the role.</p>
+        <div class="options">
+          <label><input type="radio" name="q12" value="a"> A) snap judgment</label>
+          <label><input type="radio" name="q12" value="b"> B) good fit</label>
+          <label><input type="radio" name="q12" value="c"> C) lookism</label>
+        </div>
+        <div class="explanation">✅ Correct: B) good fit.<br>Compatibility with team culture and values.</div>
+      </div>
+    </form>
+
+    <button type="button" class="btn btn-submit" onclick="submitQuiz()">Submit</button>
+    <button type="button" class="btn btn-reset" onclick="resetQuiz()">Reset</button>
+    <button type="button" class="btn btn-back" onclick="location.href='0-index.html'">⬅ Back</button>
+  </div>
+
+  <script>
+    function submitQuiz() {
+      document.querySelectorAll('.question').forEach(q => {
+        const selected = q.querySelector("input[type=radio]:checked");
+        const correct = q.dataset.answer;
+        const explanation = q.querySelector(".explanation");
+
+        if (selected) {
+          if (selected.value === correct) {
+            selected.parentElement.classList.add("correct");
+          } else {
+            selected.parentElement.classList.add("incorrect");
+          }
+        }
+        explanation.style.display = "block";
+      });
+    }
+
+    function resetQuiz() {
+      document.getElementById("quizForm").reset();
+      document.querySelectorAll(".explanation").forEach(e => e.style.display = "none");
+      document.querySelectorAll(".options label").forEach(l => {
+        l.classList.remove("correct", "incorrect");
+      });
+    }
+  </script>
+</body>
+</html>
