@@ -1,191 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic English B - Unit 1 Multiple Choice</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic English B - Unit 1 (Multiple Choice)</title>
   <link rel="stylesheet" href="../../../style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .question {
-      margin-bottom: 20px;
-      text-align: justify;
-    }
-    .options label {
-      display: block;
-      margin-left: 20px;
-      cursor: pointer;
-    }
-    .explanation {
-      display: none;
-      margin-top: 5px;
-      font-style: italic;
-      color: #555;
-      text-align: justify;
-    }
-    input[type="radio"] {
-      accent-color: #007bff; /* keep radio buttons clearly blue */
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #0056b3;
+    /* Layout */
+    body { font-family: "Segoe UI", Arial, sans-serif; padding:18px; background:linear-gradient(#f6f8fb,#ffffff); color:#111; }
+    .container { max-width:920px; margin:0 auto; background:rgba(255,255,255,0.95); padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    h1 { text-align:center; margin-bottom:12px; }
+
+    .question { margin:14px 0; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #e6eef9; }
+    .question p { margin:0 0 8px 0; text-align:justify; }
+    .options label { display:block; margin:6px 0; cursor:pointer; padding-left:6px; }
+    .options label > input { margin-right:8px; vertical-align:middle; }
+
+    /* keep radio color visible */
+    input[type="radio"] { accent-color: #007bff; }
+
+    /* text-only feedback so radios remain visually distinct */
+    .label-correct { color: #2a9d2a; font-weight:700; }
+    .label-wrong { color: #c0392b; font-weight:700; }
+
+    .explanation { display:none; margin-top:10px; padding:10px; background:#f4f8ff; border-left:4px solid #007bff; border-radius:6px; color:#1b2b4a; text-align:justify; }
+    .feedback { margin-top:8px; font-weight:700; }
+
+    .controls { margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .controls button { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; color:white; background:#007bff; }
+    .controls button.secondary { background:#6c757d; }
+    .controls button.reset { background:#dc3545; }
+
+    .checkBtn { margin-top:8px; padding:8px 10px; border-radius:6px; border:none; background:#0b79d0; color:#fff; cursor:pointer; display:none; }
+    .checkBtn:disabled { opacity:.6; cursor:not-allowed; }
+
+    /* small responsive tweaks */
+    @media (max-width:520px){
+      .container { padding:12px; }
+      .controls { flex-direction:column; align-items:stretch; }
     }
   </style>
 </head>
 <body>
-  <h1>📘 Dynamic English B - Unit 1: Multiple Choice</h1>
-  <form id="quizForm"></form>
+  <div class="container">
+    <h1>📘 Dynamic English B — Unit 1: Multiple Choice</h1>
 
-  <button type="button" onclick="submitQuiz()">Submit</button>
-  <button type="button" onclick="resetQuiz()">Reset</button>
-  <br><br>
-  <button onclick="location.href='index.html'">⬅ Back</button>
+    <div id="quizForm"></div>
 
-  <script>
-    const questions = [
-      {
-        text: "1. Despite his excellent qualifications, the hiring manager made a ___________ based on his unusual hobby listed on the CV and decided not to interview him.",
-        options: ["good fit", "unconscious bias", "snap judgment"],
-        correct: "snap judgment",
-        explanation: "A 'snap judgment' is a quick decision made without careful thought."
-      },
-      {
-        text: "2. We need to hire someone who is not only skilled but also a ___________ for our company's collaborative and informal culture.",
-        options: ["good fit", "aesthetic labor", "lookism"],
-        correct: "good fit",
-        explanation: "A 'good fit' means someone well-suited to the company culture."
-      },
-      {
-        text: "3. Flight attendants, receptionists, and models are often expected to perform ___________, meaning they must maintain a specific appearance and demeanor as part of their job.",
-        options: ["cognitive biases", "aesthetic labor", "snap judgment"],
-        correct: "aesthetic labor",
-        explanation: "'Aesthetic labor' is when employees manage appearance to fit a corporate image."
-      },
-      {
-        text: "4. The fact that taller people are statistically more likely to become CEOs is often cited as an example of ___________ in the corporate world.",
-        options: ["lookism", "a good fit", "unconscious bias"],
-        correct: "lookism",
-        explanation: "'Lookism' is discrimination based on appearance, such as height."
-      },
-      {
-        text: "5. She genuinely believes she treats all applicants equally, but her ___________ causes her to favor graduates from her own alma mater without her realizing it.",
-        options: ["snap judgment", "unconscious bias", "lookism"],
-        correct: "unconscious bias",
-        explanation: "Unconscious bias is preference formed outside awareness."
-      },
-      {
-        text: "6. Confirmation bias, where we only pay attention to information that supports our existing beliefs, is a common type of ___________.",
-        options: ["aesthetic labor", "cognitive biases", "lookism"],
-        correct: "cognitive biases",
-        explanation: "'Cognitive biases' are systematic errors in thinking."
-      },
-      {
-        text: "7. The company's policy requires strict professional dress codes and specific grooming standards, enforcing a form of ___________ on its employees.",
-        options: ["aesthetic labor", "a good fit", "unconscious bias"],
-        correct: "aesthetic labor",
-        explanation: "Dress codes and grooming standards are examples of aesthetic labor."
-      },
-      {
-        text: "8. During the speed-dating event, people had to make ___________ about their potential partners after talking for only three minutes.",
-        options: ["cognitive biases", "snap judgments", "lookism"],
-        correct: "snap judgments",
-        explanation: "Quick, superficial decisions are snap judgments."
-      },
-      {
-        text: "9. The hiring team was trained to recognize their _________, such as the tendency to prefer candidates with similar hobbies or backgrounds.",
-        options: ["unconscious biases", "aesthetic labor", "lookism"],
-        correct: "unconscious biases",
-        explanation: "Training helps staff notice unconscious biases."
-      },
-      {
-        text: "10. The law against ___________ is intended to prevent discrimination in hiring based on physical attractiveness, weight, or other aspects of appearance.",
-        options: ["a good fit", "snap judgment", "lookism"],
-        correct: "lookism",
-        explanation: "Lookism laws prevent appearance-based discrimination."
-      },
-      {
-        text: "11. Our brains use ___________ to process information quickly, but they can often lead to serious errors in judgment.",
-        options: ["cognitive biases", "a good fit", "aesthetic labor"],
-        correct: "cognitive biases",
-        explanation: "Cognitive biases save time but cause mistakes."
-      },
-      {
-        text: "12. He wasn't the most experienced candidate, but his positive attitude and team-oriented mindset made him a ___________ for the role.",
-        options: ["snap judgment", "good fit", "lookism"],
-        correct: "good fit",
-        explanation: "Personality and attitude can make someone a good fit."
-      }
-    ];
+    <div class="controls">
+      <button id="submitBtn">Submit</button>
+      <button id="resetBtn" class="reset">Reset</button>
+      <button id="backBtn" class="secondary" onclick="location.href='0-index.html'">⬅ Back</button>
+      <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+    </div>
+  </div>
 
-    const form = document.getElementById("quizForm");
+<script>
+/* Questions (12) with options, correct index (0-based) and explanation */
+const questions = [
+  { text: "Despite his excellent qualifications, the hiring manager made a ___________ based on his unusual hobby listed on the CV and decided not to interview him.",
+    options: ["good fit","unconscious bias","snap judgment"], correct: 2,
+    explanation: "C) snap judgment — a quick, ill-considered decision made without careful thought." },
 
-    questions.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.className = "question";
-      div.innerHTML = `<p>${q.text}</p>`;
-      const optsDiv = document.createElement("div");
-      optsDiv.className = "options";
+  { text: "We need to hire someone who is not only skilled but also a ___________ for our company's collaborative and informal culture.",
+    options: ["good fit","aesthetic labor","lookism"], correct: 0,
+    explanation: "A) good fit — someone well-suited to the company's culture and values." },
 
-      q.options.forEach(opt => {
-        const label = document.createElement("label");
-        label.innerHTML = `<input type="radio" name="q${i}" value="${opt}"> ${opt}`;
-        optsDiv.appendChild(label);
-      });
+  { text: "Flight attendants, receptionists, and models are often expected to perform ___________, meaning they must maintain a specific appearance and demeanor as part of their job.",
+    options: ["cognitive biases","aesthetic labor","snap judgment"], correct: 1,
+    explanation: "B) aesthetic labor — the requirement to manage looks, style and demeanor as part of the job." },
 
-      const exp = document.createElement("div");
-      exp.className = "explanation";
-      exp.id = `exp${i}`;
-      exp.innerText = q.explanation;
+  { text: "The fact that taller people are statistically more likely to become CEOs is often cited as an example of ___________ in the corporate world.",
+    options: ["lookism","a good fit","unconscious bias"], correct: 0,
+    explanation: "A) lookism — prejudice or discrimination based on physical appearance such as height." },
 
-      div.appendChild(optsDiv);
-      div.appendChild(exp);
-      form.appendChild(div);
-    });
+  { text: "She genuinely believes she treats all applicants equally, but her ___________ causes her to favor graduates from her own alma mater without her realizing it.",
+    options: ["snap judgment","unconscious bias","lookism"], correct: 1,
+    explanation: "B) unconscious bias — a preference or stereotype formed outside of conscious awareness." },
 
-    function submitQuiz() {
-      questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selected) {
-          const labels = document.querySelectorAll(`input[name="q${i}"]`);
-          labels.forEach(label => {
-            label.parentElement.style.color = "";
-            label.parentElement.style.fontWeight = "normal";
-          });
-          if (selected.value === q.correct) {
-            selected.parentElement.style.color = "green";
-            selected.parentElement.style.fontWeight = "bold";
-          } else {
-            selected.parentElement.style.color = "red";
-            selected.parentElement.style.fontWeight = "bold";
-          }
-          document.getElementById(`exp${i}`).style.display = "block";
-        }
-      });
+  { text: "Confirmation bias, where we only pay attention to information that supports our existing beliefs, is a common type of ___________.",
+    options: ["aesthetic labor","cognitive biases","lookism"], correct: 1,
+    explanation: "B) cognitive biases — systematic patterns of deviation from rational judgment." },
+
+  { text: "The company's policy requires strict professional dress codes and specific grooming standards, enforcing a form of ___________ on its employees.",
+    options: ["aesthetic labor","a good fit","unconscious bias"], correct: 0,
+    explanation: "A) aesthetic labor — appearance-management required by employers." },
+
+  { text: "During the speed-dating event, people had to make ___________ about their potential partners after talking for only three minutes.",
+    options: ["cognitive biases","snap judgments","lookism"], correct: 1,
+    explanation: "B) snap judgments — quick, often superficial decisions." },
+
+  { text: "The hiring team was trained to recognize their _________, such as the tendency to prefer candidates with similar hobbies or backgrounds.",
+    options: ["unconscious biases","aesthetic labor","lookism"], correct: 0,
+    explanation: "A) unconscious biases — automatic preferences that can affect decision-making." },
+
+  { text: "The law against ___________ is intended to prevent discrimination in hiring based on physical attractiveness, weight, or other aspects of appearance.",
+    options: ["a good fit","snap judgment","lookism"], correct: 2,
+    explanation: "C) lookism — discrimination based on looks or appearance." },
+
+  { text: "Our brains use ___________ to process information quickly, but they can often lead to serious errors in judgment.",
+    options: ["cognitive biases","a good fit","aesthetic labor"], correct: 0,
+    explanation: "A) cognitive biases — mental shortcuts that are efficient but sometimes incorrect." },
+
+  { text: "He wasn't the most experienced candidate, but his positive attitude and team-oriented mindset made him a ___________ for the role.",
+    options: ["snap judgment","good fit","lookism"], correct: 1,
+    explanation: "B) good fit — someone who matches the team's culture and needs." }
+];
+
+/* storage key */
+const STORAGE_KEY = "unit1B_mcq_v1";
+
+/* load saved state if any */
+let savedState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: [], submitted: false, checked: {} };
+
+/* render questions */
+const form = document.getElementById("quizForm");
+questions.forEach((q,i) => {
+  const wrapper = document.createElement("div");
+  wrapper.className = "question";
+  wrapper.id = `question-${i}`;
+
+  let html = `<p>${i+1}. ${q.text}</p><div class="options" role="radiogroup">`;
+  q.options.forEach((opt, idx) => {
+    // if savedState.answers exists, pre-check
+    const isChecked = (savedState.answers && savedState.answers[i] === idx) ? "checked" : "";
+    // if submitted disable inputs now
+    const disabled = savedState.submitted ? "disabled" : "";
+    html += `<label><input type="radio" name="q${i}" value="${idx}" ${isChecked} ${disabled}> ${String.fromCharCode(65+idx)}. ${opt}</label>`;
+  });
+  html += `</div>
+    <div class="feedback" id="feedback-${i}"></div>
+    <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+    <button type="button" class="checkBtn" data-index="${i}">Check</button>
+  `;
+  wrapper.innerHTML = html;
+  form.appendChild(wrapper);
+});
+
+/* elements */
+const submitBtn = document.getElementById("submitBtn");
+const resetBtn = document.getElementById("resetBtn");
+const statusDiv = document.getElementById("status");
+
+/* helper to show/hide check buttons */
+function showCheckButtons(show){
+  document.querySelectorAll(".checkBtn").forEach(btn=>{
+    btn.style.display = show ? "inline-block" : "none";
+  });
+}
+
+/* initial UI state */
+if(savedState.submitted){
+  // After submission state: inputs locked and check buttons visible
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — use Check buttons to reveal answers";
+}
+
+/* Submit handler */
+submitBtn.addEventListener("click", () => {
+  const answers = [];
+  const unanswered = [];
+  questions.forEach((_, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) unanswered.push(i+1);
+    else answers[i] = parseInt(sel.value);
+  });
+
+  if(unanswered.length > 0){
+    alert("Please answer all questions: " + unanswered.join(", "));
+    return;
+  }
+
+  // save and lock inputs
+  savedState.answers = answers;
+  savedState.submitted = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+
+  // show check buttons (they remain unpressed until user checks each Q)
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — press a Check button for each question to reveal result";
+});
+
+/* Reset handler */
+resetBtn.addEventListener("click", () => {
+  if(!confirm("Reset your answers for this quiz?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  // reload page to get clean state
+  location.reload();
+});
+
+/* confetti helper (small and optional) */
+function launchConfetti(){
+  // light weight: create small colorful dots then auto-remove
+  const c = document.createElement("div");
+  c.style.position="fixed"; c.style.left=0; c.style.top=0; c.style.width="100%"; c.style.height="100%"; c.style.pointerEvents="none"; c.style.zIndex=9999;
+  document.body.appendChild(c);
+  for(let i=0;i<25;i++){
+    const piece = document.createElement("div");
+    piece.style.position="absolute";
+    piece.style.width="8px"; piece.style.height="8px"; piece.style.borderRadius="2px";
+    piece.style.left = (Math.random()*100)+"%";
+    piece.style.top = "-5%";
+    piece.style.background = `hsl(${Math.floor(Math.random()*360)} 80% 60%)`;
+    piece.style.opacity = "0.95";
+    piece.style.transform = `translateY(0)`;
+    piece.style.transition = `transform ${1.2+Math.random()}s linear, opacity 1.2s linear`;
+    c.appendChild(piece);
+    setTimeout(()=> {
+      piece.style.transform = `translateY(${120+Math.random()*60}vh) rotate(${Math.random()*720}deg)`;
+      piece.style.opacity = "0";
+    }, 20);
+    setTimeout(()=> piece.remove(), 1800);
+  }
+  setTimeout(()=> c.remove(), 2000);
+}
+
+/* Check button handler: when pressed, reveal correct/wrong and explanation, save checked state */
+async function handleCheck(i){
+  // get saved answers array (persisted at submit time)
+  const answerIndex = savedState.answers && typeof savedState.answers[i] !== "undefined" ? savedState.answers[i] : ( (() => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    return sel ? parseInt(sel.value) : null;
+  })());
+
+  const correctIndex = questions[i].correct;
+  const feedbackEl = document.getElementById(`feedback-${i}`);
+  const explanationEl = document.getElementById(`explanation-${i}`);
+  const labels = document.querySelectorAll(`#question-${i} .options label`);
+
+  // clear previous label styles for this question
+  labels.forEach((lab, idx) => {
+    lab.classList.remove("label-correct","label-wrong");
+    lab.style.fontWeight = "normal";
+  });
+
+  if(answerIndex === null){
+    feedbackEl.textContent = "No answer selected.";
+    return;
+  }
+
+  if(answerIndex === correctIndex){
+    // mark chosen label as correct
+    const chosenLabel = labels[answerIndex];
+    chosenLabel.classList.add("label-correct");
+    chosenLabel.style.fontWeight = "700";
+    feedbackEl.textContent = "✅ Correct!";
+    // small confetti celebration
+    launchConfetti();
+  } else {
+    // mark chosen label wrong, but also optionally mark correct label visually (not revealing full explanation until explanation shown)
+    const chosenLabel = labels[answerIndex];
+    chosenLabel.classList.add("label-wrong");
+    chosenLabel.style.fontWeight = "700";
+    // optionally highlight correct label too (but user wanted correct shown after check — showing correct label now is OK)
+    const correctLabel = labels[correctIndex];
+    correctLabel.classList.add("label-correct");
+    correctLabel.style.fontWeight = "700";
+    feedbackEl.textContent = "❌ Wrong";
+  }
+
+  // show explanation text
+  explanationEl.style.display = "block";
+
+  // record that this question was checked
+  savedState.checked = savedState.checked || {};
+  savedState.checked[i] = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+}
+
+/* attach check button listeners */
+document.querySelectorAll(".checkBtn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const idx = parseInt(e.currentTarget.dataset.index);
+    // disable this check button so user knows it's been checked
+    e.currentTarget.disabled = true;
+    handleCheck(idx);
+  });
+});
+
+/* Restore previously-checked results if any */
+if(savedState.submitted){
+  // show check buttons (already done above) and restore any checked questions
+  showCheckButtons(true);
+  // enable check buttons that are not yet checked
+  document.querySelectorAll(".checkBtn").forEach(btn=>{
+    const idx = parseInt(btn.dataset.index);
+    btn.style.display = "inline-block";
+    if(savedState.checked && savedState.checked[idx]) {
+      // emulate pressing the check button to restore UI
+      btn.disabled = true;
+      handleCheck(idx);
+    } else {
+      btn.disabled = false;
     }
-
-    function resetQuiz() {
-      form.reset();
-      document.querySelectorAll(".explanation").forEach(e => e.style.display = "none");
-      document.querySelectorAll(".options label").forEach(l => {
-        l.style.color = "";
-        l.style.fontWeight = "normal";
-      });
-    }
-  </script>
+  });
+}
+</script>
 </body>
 </html>
