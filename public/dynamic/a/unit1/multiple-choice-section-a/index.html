@@ -3,108 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Section A – Multiple Choice – Unit 1</title>
-  <link rel="stylesheet" href="../../../../style.css">
-  <style>
-    .hidden { display:none; }
-    .correct { color:green; }
-    .wrong { color:red; }
-  </style>
+  <title>Dynamic English A - Unit 1 - Multiple Choice Section A</title>
+  <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
   <div class="container">
-    <h1>🅰️ Multiple Choice – Section A (1–5)</h1>
-    <form id="quiz-form">
+    <h1>🌿 Dynamic English A - Unit 1</h1>
+    <h2>Multiple Choice – Section A (Questions 1–5)</h2>
 
-      <!-- Q1 -->
+    <form id="quizForm">
+      <!-- Question 1 -->
       <div class="question">
-        <p><strong>1.</strong> Despite his excellent qualifications, the hiring manager made a ___________ based on his unusual hobby listed on the CV and decided not to interview him.</p>
-        <label><input type="radio" name="q1" value="a"> good fit</label><br>
-        <label><input type="radio" name="q1" value="b"> unconscious bias</label><br>
-        <label><input type="radio" name="q1" value="c"> snap judgment</label>
-        <p class="explanation hidden">✅ Answer: snap judgment – a quick, ill-considered decision.</p>
+        <p>1️⃣ The atmosphere around the Earth is called the ______.</p>
+        <label><input type="radio" name="q1" value="a"> a) ecosystem</label><br>
+        <label><input type="radio" name="q1" value="b"> b) environment</label><br>
+        <label><input type="radio" name="q1" value="c"> c) atmosphere</label><br>
+        <button type="button" class="checkBtn" data-question="1">Check</button>
+        <p class="explanation" id="exp1"></p>
       </div>
 
-      <!-- Q2 -->
+      <!-- Question 2 -->
       <div class="question">
-        <p><strong>2.</strong> We need to hire someone who is not only skilled but also a ___________ for our company's collaborative and informal culture.</p>
-        <label><input type="radio" name="q2" value="a"> good fit</label><br>
-        <label><input type="radio" name="q2" value="b"> aesthetic labor</label><br>
-        <label><input type="radio" name="q2" value="c"> lookism</label>
-        <p class="explanation hidden">✅ Answer: good fit – someone compatible with the company’s culture.</p>
+        <p>2️⃣ Plants make food through ______.</p>
+        <label><input type="radio" name="q2" value="a"> a) photosynthesis</label><br>
+        <label><input type="radio" name="q2" value="b"> b) respiration</label><br>
+        <label><input type="radio" name="q2" value="c"> c) digestion</label><br>
+        <button type="button" class="checkBtn" data-question="2">Check</button>
+        <p class="explanation" id="exp2"></p>
       </div>
 
-      <!-- Q3 -->
+      <!-- Question 3 -->
       <div class="question">
-        <p><strong>3.</strong> Flight attendants, receptionists, and models are often expected to perform ___________, meaning they must maintain a specific appearance and demeanor as part of their job.</p>
-        <label><input type="radio" name="q3" value="a"> cognitive biases</label><br>
-        <label><input type="radio" name="q3" value="b"> aesthetic labor</label><br>
-        <label><input type="radio" name="q3" value="c"> snap judgment</label>
-        <p class="explanation hidden">✅ Answer: aesthetic labor – managing looks and style as part of work.</p>
+        <p>3️⃣ Water that falls from clouds is called ______.</p>
+        <label><input type="radio" name="q3" value="a"> a) evaporation</label><br>
+        <label><input type="radio" name="q3" value="b"> b) precipitation</label><br>
+        <label><input type="radio" name="q3" value="c"> c) condensation</label><br>
+        <button type="button" class="checkBtn" data-question="3">Check</button>
+        <p class="explanation" id="exp3"></p>
       </div>
 
-      <!-- Q4 -->
+      <!-- Question 4 -->
       <div class="question">
-        <p><strong>4.</strong> The fact that taller people are statistically more likely to become CEOs is often cited as an example of ___________ in the corporate world.</p>
-        <label><input type="radio" name="q4" value="a"> lookism</label><br>
-        <label><input type="radio" name="q4" value="b"> good fit</label><br>
-        <label><input type="radio" name="q4" value="c"> unconscious bias</label>
-        <p class="explanation hidden">✅ Answer: lookism – appearance-based discrimination.</p>
+        <p>4️⃣ Which gas do humans need to breathe?</p>
+        <label><input type="radio" name="q4" value="a"> a) Oxygen</label><br>
+        <label><input type="radio" name="q4" value="b"> b) Carbon dioxide</label><br>
+        <label><input type="radio" name="q4" value="c"> c) Hydrogen</label><br>
+        <button type="button" class="checkBtn" data-question="4">Check</button>
+        <p class="explanation" id="exp4"></p>
       </div>
 
-      <!-- Q5 -->
+      <!-- Question 5 -->
       <div class="question">
-        <p><strong>5.</strong> She genuinely believes she treats all applicants equally, but her ___________ causes her to favor graduates from her own alma mater without realizing it.</p>
-        <label><input type="radio" name="q5" value="a"> snap judgment</label><br>
-        <label><input type="radio" name="q5" value="b"> unconscious bias</label><br>
-        <label><input type="radio" name="q5" value="c"> lookism</label>
-        <p class="explanation hidden">✅ Answer: unconscious bias – automatic, unaware preference.</p>
+        <p>5️⃣ Cutting down trees is called ______.</p>
+        <label><input type="radio" name="q5" value="a"> a) pollution</label><br>
+        <label><input type="radio" name="q5" value="b"> b) deforestation</label><br>
+        <label><input type="radio" name="q5" value="c"> c) reforestation</label><br>
+        <button type="button" class="checkBtn" data-question="5">Check</button>
+        <p class="explanation" id="exp5"></p>
       </div>
 
-      <button type="button" id="submit-btn">Submit</button>
-      <button type="button" id="check-btn" class="hidden">Check Answers</button>
+      <button type="button" id="submitBtn">Submit</button>
+      <button type="reset" id="resetBtn">Reset</button>
     </form>
 
-    <br>
     <button onclick="location.href='../multiple-choice.html'">⬅ Back to Sections</button>
   </div>
 
-  <audio id="correctSound" src="../../../../sounds/correct.mp3"></audio>
-  <audio id="wrongSound" src="../../../../sounds/wrong.mp3"></audio>
+  <audio id="correctSound" src="../../../sounds/correct.mp3"></audio>
+  <audio id="wrongSound" src="../../../sounds/wrong.mp3"></audio>
 
-  <script>
-    const answers = {q1:'c', q2:'a', q3:'b', q4:'a', q5:'b'};
-    const submitBtn=document.getElementById('submit-btn');
-    const checkBtn=document.getElementById('check-btn');
-
-    submitBtn.onclick=()=>{
-      const form=new FormData(document.getElementById('quiz-form'));
-      for(let q in answers){ if(!form.get(q)){alert("Please answer all questions before submitting.");return;} }
-      submitBtn.classList.add('hidden'); checkBtn.classList.remove('hidden');
-    };
-
-    checkBtn.onclick=()=>{
-      const form=new FormData(document.getElementById('quiz-form'));
-      const ok=document.getElementById('correctSound');
-      const no=document.getElementById('wrongSound');
-      document.querySelectorAll('.question').forEach(q=>{
-        const name=q.querySelector('input').name;
-        const chosen=form.get(name);
-        const exp=q.querySelector('.explanation');
-        exp.classList.remove('hidden');
-        const radios=q.querySelectorAll('input');
-        radios.forEach(r=>r.parentElement.classList.remove('correct','wrong'));
-        const correct=answers[name];
-        if(chosen===correct){
-          q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('correct');
-          ok.play();
-        }else{
-          q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('wrong');
-          no.play();
-        }
-      });
-      checkBtn.disabled=true;
-    };
-  </script>
+  <script src="../../../scripts/multiple-choice.js"></script>
 </body>
 </html>
