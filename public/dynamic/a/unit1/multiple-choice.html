@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic English A - Unit 1 (Multiple Choice)</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; padding:18px; background:linear-gradient(#f6f8fb,#ffffff); color:#111; }
+    .container { max-width:920px; margin:0 auto; background:rgba(255,255,255,0.95); padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    h1 { text-align:center; margin-bottom:12px; }
+
+    .question { margin:14px 0; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #e6eef9; }
+    .question p { margin:0 0 8px 0; text-align:justify; }
+    .options label { display:block; margin:6px 0; cursor:pointer; padding-left:6px; }
+    .options label > input { margin-right:8px; vertical-align:middle; }
+    input[type="radio"] { accent-color: #007bff; }
+
+    .label-correct { color: #2a9d2a; font-weight:700; }
+    .label-wrong { color: #c0392b; font-weight:700; }
+
+    .explanation { display:none; margin-top:10px; padding:10px; background:#f4f8ff; border-left:4px solid #007bff; border-radius:6px; color:#1b2b4a; text-align:justify; }
+    .feedback { margin-top:8px; font-weight:700; }
+
+    .controls { margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .controls button { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; color:white; background:#007bff; }
+    .controls button.secondary { background:#6c757d; }
+    .controls button.reset { background:#dc3545; }
+    .checkBtn { margin-top:8px; padding:8px 10px; border-radius:6px; border:none; background:#0b79d0; color:#fff; cursor:pointer; display:none; }
+    .checkBtn:disabled { opacity:.6; cursor:not-allowed; }
+
+    @media (max-width:520px){
+      .container { padding:12px; }
+      .controls { flex-direction:column; align-items:stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌱 Dynamic English A — Unit 1: Environmental Vocabulary (Multiple Choice)</h1>
+
+    <div id="quizForm"></div>
+
+    <div class="controls">
+      <button id="submitBtn">Submit</button>
+      <button id="resetBtn" class="reset">Reset</button>
+      <button id="backBtn" class="secondary" onclick="location.href='index.html'">⬅ Back</button>
+      <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+    </div>
+  </div>
+
+<script>
+const questions = [
+  { text: "The government is investing in solar and wind power to reduce the use of fossil fuels. This is an example of:",
+    options: ["environmental degradation","climate change mitigation","ocean acidification"],
+    correct: 1,
+    explanation: "B) climate change mitigation — actions to reduce or prevent greenhouse gas emissions, such as using renewable energy." },
+
+  { text: "One way to lower your personal carbon footprint is to:",
+    options: ["use reusable bags instead of plastic ones","separate your glass and paper for recycling","drive a car to work alone instead of taking public transport"],
+    correct: 0,
+    explanation: "A) use reusable bags — reduces single-use plastics, lowering emissions from production and disposal." },
+
+  { text: "When the ocean absorbs too much CO₂ from the atmosphere, it becomes more acidic. This process is known as:",
+    options: ["soil contamination","ocean acidification","toxic waste"],
+    correct: 1,
+    explanation: "B) ocean acidification — caused by excessive CO₂ absorption, harming coral and marine life." },
+
+  { text: "Clearing large areas of rainforest causes deforestation, which leads to:",
+    options: ["an increase in greenhouse gas emissions","a cleaner atmosphere","more oxygen being produced"],
+    correct: 0,
+    explanation: "A) increases greenhouse gases — cutting trees releases stored CO₂ into the air." },
+
+  { text: "The building of a new factory caused environmental degradation, meaning the local environment has:",
+    options: ["become healthier","been improved","been significantly damaged and polluted"],
+    correct: 2,
+    explanation: "C) been damaged and polluted — 'degradation' means environmental decline or harm." },
+
+  { text: "Factories release greenhouse gases, which are the main cause of:",
+    options: ["global warming and climate change","increased biodiversity","air purification"],
+    correct: 0,
+    explanation: "A) global warming and climate change — caused by trapped heat from CO₂ and methane." },
+
+  { text: "The main cause of biodiversity loss is:",
+    options: ["habitat destruction by humans","more protected areas","natural evolution"],
+    correct: 0,
+    explanation: "A) habitat destruction — humans clear forests, pollute, and urbanize natural areas." },
+
+  { text: "The chemical plant was closed after leaking toxic waste into the ground. This material:",
+    options: ["can be safely thrown in any bin","poses a serious health and environmental risk","is good for plants"],
+    correct: 1,
+    explanation: "B) toxic waste — poisonous and harmful to people and ecosystems." },
+
+  { text: "Most non-recycled trash ends up in landfill sites, which are:",
+    options: ["places for burning waste for energy","areas where waste is buried","centers for recycling materials"],
+    correct: 1,
+    explanation: "B) landfill sites — land areas where garbage is buried and accumulates." },
+
+  { text: "The farmers couldn’t grow crops because of soil contamination, meaning the soil was:",
+    options: ["very fertile","polluted with harmful substances","safe for agriculture"],
+    correct: 1,
+    explanation: "B) polluted — contaminated with chemicals or waste harmful to plants." }
+];
+
+const STORAGE_KEY = "unit1A_mcq_v1";
+let savedState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: [], submitted: false, checked: {} };
+const form = document.getElementById("quizForm");
+
+questions.forEach((q,i) => {
+  const wrapper = document.createElement("div");
+  wrapper.className = "question";
+  wrapper.id = `question-${i}`;
+  let html = `<p>${i+1}. ${q.text}</p><div class="options">`;
+  q.options.forEach((opt, idx) => {
+    const isChecked = (savedState.answers && savedState.answers[i] === idx) ? "checked" : "";
+    const disabled = savedState.submitted ? "disabled" : "";
+    html += `<label><input type="radio" name="q${i}" value="${idx}" ${isChecked} ${disabled}> ${String.fromCharCode(65+idx)}. ${opt}</label>`;
+  });
+  html += `</div>
+    <div class="feedback" id="feedback-${i}"></div>
+    <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+    <button type="button" class="checkBtn" data-index="${i}">Check</button>`;
+  wrapper.innerHTML = html;
+  form.appendChild(wrapper);
+});
+
+const submitBtn = document.getElementById("submitBtn");
+const resetBtn = document.getElementById("resetBtn");
+const statusDiv = document.getElementById("status");
+
+function showCheckButtons(show){ document.querySelectorAll(".checkBtn").forEach(btn=>btn.style.display=show?"inline-block":"none"); }
+
+if(savedState.submitted){
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — use Check buttons to reveal answers";
+}
+
+submitBtn.addEventListener("click", () => {
+  const answers = [], unanswered = [];
+  questions.forEach((_, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) unanswered.push(i+1);
+    else answers[i] = parseInt(sel.value);
+  });
+  if(unanswered.length){ alert("Please answer all questions: " + unanswered.join(", ")); return; }
+  savedState.answers = answers; savedState.submitted = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — press a Check button for each question to reveal result";
+});
+
+resetBtn.addEventListener("click", () => {
+  if(!confirm("Reset your answers for this quiz?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+});
+
+function launchConfetti(){
+  const c=document.createElement("div");
+  c.style.position="fixed";c.style.left=0;c.style.top=0;c.style.width="100%";c.style.height="100%";
+  c.style.pointerEvents="none";c.style.zIndex=9999;document.body.appendChild(c);
+  for(let i=0;i<25;i++){const p=document.createElement("div");
+    p.style.position="absolute";p.style.width="8px";p.style.height="8px";p.style.borderRadius="2px";
+    p.style.left=(Math.random()*100)+"%";p.style.top="-5%";
+    p.style.background=`hsl(${Math.random()*360} 80% 60%)`;p.style.opacity="0.95";
+    p.style.transition=`transform ${1.2+Math.random()}s linear, opacity 1.2s linear`;
+    c.appendChild(p);setTimeout(()=>{p.style.transform=`translateY(${120+Math.random()*60}vh) rotate(${Math.random()*720}deg)`;p.style.opacity="0";},20);
+    setTimeout(()=>p.remove(),1800);}setTimeout(()=>c.remove(),2000);
+}
+
+function handleCheck(i){
+  const answerIndex = savedState.answers[i];
+  const correctIndex = questions[i].correct;
+  const feedbackEl=document.getElementById(`feedback-${i}`);
+  const explanationEl=document.getElementById(`explanation-${i}`);
+  const labels=document.querySelectorAll(`#question-${i} .options label`);
+  labels.forEach(l=>{l.classList.remove("label-correct","label-wrong");l.style.fontWeight="normal";});
+  if(answerIndex===correctIndex){
+    labels[answerIndex].classList.add("label-correct");labels[answerIndex].style.fontWeight="700";
+    feedbackEl.textContent="✅ Correct!";launchConfetti();
+  } else {
+    labels[answerIndex].classList.add("label-wrong");labels[answerIndex].style.fontWeight="700";
+    labels[correctIndex].classList.add("label-correct");labels[correctIndex].style.fontWeight="700";
+    feedbackEl.textContent="❌ Wrong";
+  }
+  explanationEl.style.display="block";
+  savedState.checked[i]=true;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(savedState));
+}
+
+document.querySelectorAll(".checkBtn").forEach(btn=>{
+  btn.addEventListener("click",e=>{
+    const idx=parseInt(e.currentTarget.dataset.index);
+    e.currentTarget.disabled=true;
+    handleCheck(idx);
+  });
+});
+
+if(savedState.submitted){
+  showCheckButtons(true);
+  document.querySelectorAll(".checkBtn").forEach(btn=>{
+    const idx=parseInt(btn.dataset.index);
+    if(savedState.checked[idx]){btn.disabled=true;handleCheck(idx);}
+    else btn.disabled=false;
+  });
+}
+</script>
+</body>
+</html>
