@@ -3,36 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Section A - Multiple Choice - Unit 1</title>
+  <title>Section A – Multiple Choice – Unit 1</title>
   <link rel="stylesheet" href="../../../../style.css">
+  <style>
+    .hidden { display:none; }
+    .correct { color:green; }
+    .wrong { color:red; }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>🅰️ Multiple Choice - Section A (1–5)</h1>
-    <p>Answer the following questions and then press “Submit”.</p>
-
+    <h1>🅰️ Multiple Choice – Section A (1–5)</h1>
     <form id="quiz-form">
-      <!-- Question 1 -->
+
+      <!-- Q1 -->
       <div class="question">
-        <p><strong>1. [Your Q1 text here]</strong></p>
-        <label><input type="radio" name="q1" value="a"> Option A</label><br>
-        <label><input type="radio" name="q1" value="b"> Option B</label><br>
-        <label><input type="radio" name="q1" value="c"> Option C</label><br>
-        <label><input type="radio" name="q1" value="d"> Option D</label><br>
-        <p class="explanation hidden">✅ Correct answer: B. [Explanation here]</p>
+        <p><strong>1.</strong> Despite his excellent qualifications, the hiring manager made a ___________ based on his unusual hobby listed on the CV and decided not to interview him.</p>
+        <label><input type="radio" name="q1" value="a"> good fit</label><br>
+        <label><input type="radio" name="q1" value="b"> unconscious bias</label><br>
+        <label><input type="radio" name="q1" value="c"> snap judgment</label>
+        <p class="explanation hidden">✅ Answer: snap judgment – a quick, ill-considered decision.</p>
       </div>
 
-      <!-- Repeat for Q2–Q5 -->
+      <!-- Q2 -->
       <div class="question">
-        <p><strong>2. [Your Q2 text here]</strong></p>
-        <label><input type="radio" name="q2" value="a"> Option A</label><br>
-        <label><input type="radio" name="q2" value="b"> Option B</label><br>
-        <label><input type="radio" name="q2" value="c"> Option C</label><br>
-        <label><input type="radio" name="q2" value="d"> Option D</label><br>
-        <p class="explanation hidden">✅ Correct answer: D. [Explanation here]</p>
+        <p><strong>2.</strong> We need to hire someone who is not only skilled but also a ___________ for our company's collaborative and informal culture.</p>
+        <label><input type="radio" name="q2" value="a"> good fit</label><br>
+        <label><input type="radio" name="q2" value="b"> aesthetic labor</label><br>
+        <label><input type="radio" name="q2" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: good fit – someone compatible with the company’s culture.</p>
       </div>
 
-      <!-- Add Q3–Q5 similarly -->
+      <!-- Q3 -->
+      <div class="question">
+        <p><strong>3.</strong> Flight attendants, receptionists, and models are often expected to perform ___________, meaning they must maintain a specific appearance and demeanor as part of their job.</p>
+        <label><input type="radio" name="q3" value="a"> cognitive biases</label><br>
+        <label><input type="radio" name="q3" value="b"> aesthetic labor</label><br>
+        <label><input type="radio" name="q3" value="c"> snap judgment</label>
+        <p class="explanation hidden">✅ Answer: aesthetic labor – managing looks and style as part of work.</p>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question">
+        <p><strong>4.</strong> The fact that taller people are statistically more likely to become CEOs is often cited as an example of ___________ in the corporate world.</p>
+        <label><input type="radio" name="q4" value="a"> lookism</label><br>
+        <label><input type="radio" name="q4" value="b"> good fit</label><br>
+        <label><input type="radio" name="q4" value="c"> unconscious bias</label>
+        <p class="explanation hidden">✅ Answer: lookism – appearance-based discrimination.</p>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question">
+        <p><strong>5.</strong> She genuinely believes she treats all applicants equally, but her ___________ causes her to favor graduates from her own alma mater without realizing it.</p>
+        <label><input type="radio" name="q5" value="a"> snap judgment</label><br>
+        <label><input type="radio" name="q5" value="b"> unconscious bias</label><br>
+        <label><input type="radio" name="q5" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: unconscious bias – automatic, unaware preference.</p>
+      </div>
 
       <button type="button" id="submit-btn">Submit</button>
       <button type="button" id="check-btn" class="hidden">Check Answers</button>
@@ -46,52 +73,38 @@
   <audio id="wrongSound" src="../../../../sounds/wrong.mp3"></audio>
 
   <script>
-    const answers = { q1: "b", q2: "d", q3: "a", q4: "c", q5: "b" };
-    const submitBtn = document.getElementById("submit-btn");
-    const checkBtn = document.getElementById("check-btn");
+    const answers = {q1:'c', q2:'a', q3:'b', q4:'a', q5:'b'};
+    const submitBtn=document.getElementById('submit-btn');
+    const checkBtn=document.getElementById('check-btn');
 
-    submitBtn.addEventListener("click", () => {
-      const form = document.getElementById("quiz-form");
-      const data = new FormData(form);
-      let allAnswered = true;
-      let score = 0;
+    submitBtn.onclick=()=>{
+      const form=new FormData(document.getElementById('quiz-form'));
+      for(let q in answers){ if(!form.get(q)){alert("Please answer all questions before submitting.");return;} }
+      submitBtn.classList.add('hidden'); checkBtn.classList.remove('hidden');
+    };
 
-      for (const q in answers) {
-        const selected = data.get(q);
-        if (!selected) allAnswered = false;
-      }
-
-      if (!allAnswered) {
-        alert("Please answer all questions before submitting.");
-        return;
-      }
-
-      submitBtn.classList.add("hidden");
-      checkBtn.classList.remove("hidden");
-    });
-
-    checkBtn.addEventListener("click", () => {
-      const form = document.getElementById("quiz-form");
-      const data = new FormData(form);
-      const correctSound = document.getElementById("correctSound");
-      const wrongSound = document.getElementById("wrongSound");
-
-      for (const q in answers) {
-        const question = document.querySelector(`input[name="${q}"]:checked`);
-        const explanation = document.querySelector(`input[name="${q}"]`).closest(".question").querySelector(".explanation");
-        explanation.classList.remove("hidden");
-
-        if (question.value === answers[q]) {
-          question.parentElement.style.color = "green";
-          correctSound.play();
-        } else {
-          question.parentElement.style.color = "red";
-          wrongSound.play();
+    checkBtn.onclick=()=>{
+      const form=new FormData(document.getElementById('quiz-form'));
+      const ok=document.getElementById('correctSound');
+      const no=document.getElementById('wrongSound');
+      document.querySelectorAll('.question').forEach(q=>{
+        const name=q.querySelector('input').name;
+        const chosen=form.get(name);
+        const exp=q.querySelector('.explanation');
+        exp.classList.remove('hidden');
+        const radios=q.querySelectorAll('input');
+        radios.forEach(r=>r.parentElement.classList.remove('correct','wrong'));
+        const correct=answers[name];
+        if(chosen===correct){
+          q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('correct');
+          ok.play();
+        }else{
+          q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('wrong');
+          no.play();
         }
-      }
-
-      checkBtn.disabled = true;
-    });
+      });
+      checkBtn.disabled=true;
+    };
   </script>
 </body>
-</html> 
+</html>
