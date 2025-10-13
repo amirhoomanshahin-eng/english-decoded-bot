@@ -1,1 +1,97 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section A - Multiple Choice - Unit 1</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🅰️ Multiple Choice - Section A (1–5)</h1>
+    <p>Answer the following questions and then press “Submit”.</p>
+
+    <form id="quiz-form">
+      <!-- Question 1 -->
+      <div class="question">
+        <p><strong>1. [Your Q1 text here]</strong></p>
+        <label><input type="radio" name="q1" value="a"> Option A</label><br>
+        <label><input type="radio" name="q1" value="b"> Option B</label><br>
+        <label><input type="radio" name="q1" value="c"> Option C</label><br>
+        <label><input type="radio" name="q1" value="d"> Option D</label><br>
+        <p class="explanation hidden">✅ Correct answer: B. [Explanation here]</p>
+      </div>
+
+      <!-- Repeat for Q2–Q5 -->
+      <div class="question">
+        <p><strong>2. [Your Q2 text here]</strong></p>
+        <label><input type="radio" name="q2" value="a"> Option A</label><br>
+        <label><input type="radio" name="q2" value="b"> Option B</label><br>
+        <label><input type="radio" name="q2" value="c"> Option C</label><br>
+        <label><input type="radio" name="q2" value="d"> Option D</label><br>
+        <p class="explanation hidden">✅ Correct answer: D. [Explanation here]</p>
+      </div>
+
+      <!-- Add Q3–Q5 similarly -->
+
+      <button type="button" id="submit-btn">Submit</button>
+      <button type="button" id="check-btn" class="hidden">Check Answers</button>
+    </form>
+
+    <br>
+    <button onclick="location.href='../multiple-choice.html'">⬅ Back to Sections</button>
+  </div>
+
+  <audio id="correctSound" src="../../../../sounds/correct.mp3"></audio>
+  <audio id="wrongSound" src="../../../../sounds/wrong.mp3"></audio>
+
+  <script>
+    const answers = { q1: "b", q2: "d", q3: "a", q4: "c", q5: "b" };
+    const submitBtn = document.getElementById("submit-btn");
+    const checkBtn = document.getElementById("check-btn");
+
+    submitBtn.addEventListener("click", () => {
+      const form = document.getElementById("quiz-form");
+      const data = new FormData(form);
+      let allAnswered = true;
+      let score = 0;
+
+      for (const q in answers) {
+        const selected = data.get(q);
+        if (!selected) allAnswered = false;
+      }
+
+      if (!allAnswered) {
+        alert("Please answer all questions before submitting.");
+        return;
+      }
+
+      submitBtn.classList.add("hidden");
+      checkBtn.classList.remove("hidden");
+    });
+
+    checkBtn.addEventListener("click", () => {
+      const form = document.getElementById("quiz-form");
+      const data = new FormData(form);
+      const correctSound = document.getElementById("correctSound");
+      const wrongSound = document.getElementById("wrongSound");
+
+      for (const q in answers) {
+        const question = document.querySelector(`input[name="${q}"]:checked`);
+        const explanation = document.querySelector(`input[name="${q}"]`).closest(".question").querySelector(".explanation");
+        explanation.classList.remove("hidden");
+
+        if (question.value === answers[q]) {
+          question.parentElement.style.color = "green";
+          correctSound.play();
+        } else {
+          question.parentElement.style.color = "red";
+          wrongSound.play();
+        }
+      }
+
+      checkBtn.disabled = true;
+    });
+  </script>
+</body>
+</html> 
