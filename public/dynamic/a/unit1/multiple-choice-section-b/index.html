@@ -1,1 +1,95 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section B – Multiple Choice – Unit 1</title>
+  <link rel="stylesheet" href="../../../../style.css">
+  <style>.hidden{display:none}.correct{color:green}.wrong{color:red}</style>
+</head>
+<body>
+  <div class="container">
+    <h1>🅱️ Multiple Choice – Section B (6–10)</h1>
+    <form id="quiz-form">
+
+      <!-- Q6 -->
+      <div class="question">
+        <p><strong>6.</strong> Confirmation bias, where we only pay attention to information that supports our existing beliefs, is a common type of ___________.</p>
+        <label><input type="radio" name="q6" value="a"> aesthetic labor</label><br>
+        <label><input type="radio" name="q6" value="b"> cognitive biases</label><br>
+        <label><input type="radio" name="q6" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: cognitive biases – systematic errors in thinking.</p>
+      </div>
+
+      <!-- Q7 -->
+      <div class="question">
+        <p><strong>7.</strong> The company's policy requires strict professional dress codes and grooming standards, enforcing a form of ___________ on its employees.</p>
+        <label><input type="radio" name="q7" value="a"> aesthetic labor</label><br>
+        <label><input type="radio" name="q7" value="b"> good fit</label><br>
+        <label><input type="radio" name="q7" value="c"> unconscious bias</label>
+        <p class="explanation hidden">✅ Answer: aesthetic labor – appearance requirements at work.</p>
+      </div>
+
+      <!-- Q8 -->
+      <div class="question">
+        <p><strong>8.</strong> During the speed-dating event, people had to make ___________ about their potential partners after talking for only three minutes.</p>
+        <label><input type="radio" name="q8" value="a"> cognitive biases</label><br>
+        <label><input type="radio" name="q8" value="b"> snap judgments</label><br>
+        <label><input type="radio" name="q8" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: snap judgments – quick decisions with little info.</p>
+      </div>
+
+      <!-- Q9 -->
+      <div class="question">
+        <p><strong>9.</strong> The hiring team was trained to recognize their _________, such as preferring candidates with similar hobbies or backgrounds.</p>
+        <label><input type="radio" name="q9" value="a"> unconscious biases</label><br>
+        <label><input type="radio" name="q9" value="b"> aesthetic labor</label><br>
+        <label><input type="radio" name="q9" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: unconscious biases – automatic mental shortcuts.</p>
+      </div>
+
+      <!-- Q10 -->
+      <div class="question">
+        <p><strong>10.</strong> The law against ___________ is intended to prevent discrimination in hiring based on physical attractiveness, weight, or other aspects of appearance.</p>
+        <label><input type="radio" name="q10" value="a"> good fit</label><br>
+        <label><input type="radio" name="q10" value="b"> snap judgment</label><br>
+        <label><input type="radio" name="q10" value="c"> lookism</label>
+        <p class="explanation hidden">✅ Answer: lookism – discrimination based on appearance.</p>
+      </div>
+
+      <button type="button" id="submit-btn">Submit</button>
+      <button type="button" id="check-btn" class="hidden">Check Answers</button>
+    </form>
+
+    <br>
+    <button onclick="location.href='../multiple-choice.html'">⬅ Back to Sections</button>
+  </div>
+
+  <audio id="correctSound" src="../../../../sounds/correct.mp3"></audio>
+  <audio id="wrongSound" src="../../../../sounds/wrong.mp3"></audio>
+
+  <script>
+    const answers={q6:'b',q7:'a',q8:'b',q9:'a',q10:'c'};
+    const s=document.getElementById('submit-btn'),c=document.getElementById('check-btn');
+    s.onclick=()=>{
+      const f=new FormData(document.getElementById('quiz-form'));
+      for(let q in answers){if(!f.get(q)){alert("Please answer all questions before submitting.");return;}}
+      s.classList.add('hidden');c.classList.remove('hidden');
+    };
+    c.onclick=()=>{
+      const f=new FormData(document.getElementById('quiz-form'));
+      const ok=document.getElementById('correctSound');
+      const no=document.getElementById('wrongSound');
+      document.querySelectorAll('.question').forEach(q=>{
+        const n=q.querySelector('input').name,chosen=f.get(n),exp=q.querySelector('.explanation');
+        exp.classList.remove('hidden');
+        q.querySelectorAll('input').forEach(r=>r.parentElement.classList.remove('correct','wrong'));
+        const correct=answers[n];
+        if(chosen===correct){q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('correct');ok.play();}
+        else{q.querySelector(`input[value="${chosen}"]`).parentElement.classList.add('wrong');no.play();}
+      });
+      c.disabled=true;
+    };
+  </script>
+</body>
+</html> 
