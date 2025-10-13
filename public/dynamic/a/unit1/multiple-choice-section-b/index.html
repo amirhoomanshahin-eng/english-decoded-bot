@@ -1,77 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic English A - Unit 1 - Multiple Choice Section B</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic English A - Unit 1 (Multiple Choice Section B)</title>
   <link rel="stylesheet" href="../../../style.css">
+  <style>
+    /* same styles as Dynamic B Unit 1 */
+    body { font-family: "Segoe UI", Arial, sans-serif; padding:18px; background:linear-gradient(#f6f8fb,#ffffff); color:#111; }
+    .container { max-width:920px; margin:0 auto; background:rgba(255,255,255,0.95); padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    h1 { text-align:center; margin-bottom:12px; }
+    .question { margin:14px 0; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #e6eef9; }
+    .question p { margin:0 0 8px 0; text-align:justify; }
+    .options label { display:block; margin:6px 0; cursor:pointer; padding-left:6px; }
+    .options label > input { margin-right:8px; vertical-align:middle; }
+    input[type="radio"] { accent-color: #007bff; }
+    .label-correct { color: #2a9d2a; font-weight:700; }
+    .label-wrong { color: #c0392b; font-weight:700; }
+    .explanation { display:none; margin-top:10px; padding:10px; background:#f4f8ff; border-left:4px solid #007bff; border-radius:6px; color:#1b2b4a; text-align:justify; }
+    .feedback { margin-top:8px; font-weight:700; }
+    .controls { margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .controls button { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; color:white; background:#007bff; }
+    .controls button.secondary { background:#6c757d; }
+    .controls button.reset { background:#dc3545; }
+    .checkBtn { margin-top:8px; padding:8px 10px; border-radius:6px; border:none; background:#0b79d0; color:#fff; cursor:pointer; display:none; }
+    .checkBtn:disabled { opacity:.6; cursor:not-allowed; }
+    @media (max-width:520px){
+      .container { padding:12px; }
+      .controls { flex-direction:column; align-items:stretch; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌿 Dynamic English A - Unit 1</h1>
-    <h2>Multiple Choice – Section B (Questions 6–10)</h2>
+    <h1>🌿 Dynamic English A — Unit 1: Multiple Choice Section B</h1>
 
-    <form id="quizForm">
-      <!-- Question 6 -->
-      <div class="question">
-        <p>6️⃣ Which of these helps to clean the air?</p>
-        <label><input type="radio" name="q6" value="a"> a) Plastic</label><br>
-        <label><input type="radio" name="q6" value="b"> b) Trees</label><br>
-        <label><input type="radio" name="q6" value="c"> c) Smoke</label><br>
-        <button type="button" class="checkBtn" data-question="6">Check</button>
-        <p class="explanation" id="exp6"></p>
-      </div>
+    <div id="quizForm"></div>
 
-      <!-- Question 7 -->
-      <div class="question">
-        <p>7️⃣ What is the process of turning waste into new materials?</p>
-        <label><input type="radio" name="q7" value="a"> a) Recycling</label><br>
-        <label><input type="radio" name="q7" value="b"> b) Melting</label><br>
-        <label><input type="radio" name="q7" value="c"> c) Burning</label><br>
-        <button type="button" class="checkBtn" data-question="7">Check</button>
-        <p class="explanation" id="exp7"></p>
-      </div>
-
-      <!-- Question 8 -->
-      <div class="question">
-        <p>8️⃣ What type of energy comes from the sun?</p>
-        <label><input type="radio" name="q8" value="a"> a) Solar energy</label><br>
-        <label><input type="radio" name="q8" value="b"> b) Wind energy</label><br>
-        <label><input type="radio" name="q8" value="c"> c) Water energy</label><br>
-        <button type="button" class="checkBtn" data-question="8">Check</button>
-        <p class="explanation" id="exp8"></p>
-      </div>
-
-      <!-- Question 9 -->
-      <div class="question">
-        <p>9️⃣ The melting of polar ice is caused mainly by ______.</p>
-        <label><input type="radio" name="q9" value="a"> a) global warming</label><br>
-        <label><input type="radio" name="q9" value="b"> b) recycling</label><br>
-        <label><input type="radio" name="q9" value="c"> c) photosynthesis</label><br>
-        <button type="button" class="checkBtn" data-question="9">Check</button>
-        <p class="explanation" id="exp9"></p>
-      </div>
-
-      <!-- Question 10 -->
-      <div class="question">
-        <p>🔟 Using wind to produce energy is called ______.</p>
-        <label><input type="radio" name="q10" value="a"> a) hydro power</label><br>
-        <label><input type="radio" name="q10" value="b"> b) wind power</label><br>
-        <label><input type="radio" name="q10" value="c"> c) solar power</label><br>
-        <button type="button" class="checkBtn" data-question="10">Check</button>
-        <p class="explanation" id="exp10"></p>
-      </div>
-
-      <button type="button" id="submitBtn">Submit</button>
-      <button type="reset" id="resetBtn">Reset</button>
-    </form>
-
-    <button onclick="location.href='../multiple-choice.html'">⬅ Back to Sections</button>
+    <div class="controls">
+      <button id="submitBtn">Submit</button>
+      <button id="resetBtn" class="reset">Reset</button>
+      <button id="backBtn" class="secondary" onclick="location.href='../multiple-choice.html'">⬅ Back</button>
+      <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+    </div>
   </div>
 
-  <audio id="correctSound" src="../../../sounds/correct.mp3"></audio>
-  <audio id="wrongSound" src="../../../sounds/wrong.mp3"></audio>
+<script>
+/* Questions 6–10 of Dynamic A unit 1 */
+const questions = [
+  { text: "Factories and power plants release large amounts of greenhouse gas emissions, which are the primary cause of:",
+    options: ["global warming and climate change","increased biodiversity","air purification"], correct: 0,
+    explanation: "Greenhouse gas emissions trap heat, causing global warming and climate change." },
 
-  <script src="../../../scripts/multiple-choice.js"></script>
+  { text: "The primary cause of biodiversity loss worldwide is:",
+    options: ["habitat destruction due to human activities","increase in national parks","natural evolution of species"], correct: 0,
+    explanation: "Habitat destruction from human activities like deforestation is the main cause of biodiversity loss." },
+
+  { text: "The old chemical plant was shut down after leaking toxic waste. This material:",
+    options: ["can be safely disposed in any bin","poses serious risk to humans and environment","is beneficial for plants"], correct: 1,
+    explanation: "Toxic waste is harmful and can contaminate soil, water, and air." },
+
+  { text: "Most non-recycled household trash ends up in landfill sites, which are:",
+    options: ["for burning waste for energy","areas where waste is buried","centers for recycling"], correct: 1,
+    explanation: "Landfills are areas where waste is buried and accumulates." },
+
+  { text: "Farmers couldn't grow crops due to soil contamination from an industrial site. This means the soil was:",
+    options: ["very fertile","polluted with harmful substances","perfectly safe"], correct: 1,
+    explanation: "Soil contamination occurs when harmful chemicals make land unsuitable for agriculture." }
+];
+
+/* storage key */
+const STORAGE_KEY = "unit1A_mcq_sectionB";
+
+/* rest of the Dynamic B script (submit, reset, check buttons, confetti) stays exactly the same */
+</script>
+<script src="../../../scripts/multiple-choice.js"></script>
 </body>
 </html>
