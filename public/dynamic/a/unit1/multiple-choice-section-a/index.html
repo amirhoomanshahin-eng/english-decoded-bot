@@ -1,77 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic English A - Unit 1 - Multiple Choice Section A</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic English A - Unit 1 (Multiple Choice Section A)</title>
   <link rel="stylesheet" href="../../../style.css">
+  <style>
+    /* copy exact styles from Dynamic B unit 1 */
+    body { font-family: "Segoe UI", Arial, sans-serif; padding:18px; background:linear-gradient(#f6f8fb,#ffffff); color:#111; }
+    .container { max-width:920px; margin:0 auto; background:rgba(255,255,255,0.95); padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    h1 { text-align:center; margin-bottom:12px; }
+    .question { margin:14px 0; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #e6eef9; }
+    .question p { margin:0 0 8px 0; text-align:justify; }
+    .options label { display:block; margin:6px 0; cursor:pointer; padding-left:6px; }
+    .options label > input { margin-right:8px; vertical-align:middle; }
+    input[type="radio"] { accent-color: #007bff; }
+    .label-correct { color: #2a9d2a; font-weight:700; }
+    .label-wrong { color: #c0392b; font-weight:700; }
+    .explanation { display:none; margin-top:10px; padding:10px; background:#f4f8ff; border-left:4px solid #007bff; border-radius:6px; color:#1b2b4a; text-align:justify; }
+    .feedback { margin-top:8px; font-weight:700; }
+    .controls { margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .controls button { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; color:white; background:#007bff; }
+    .controls button.secondary { background:#6c757d; }
+    .controls button.reset { background:#dc3545; }
+    .checkBtn { margin-top:8px; padding:8px 10px; border-radius:6px; border:none; background:#0b79d0; color:#fff; cursor:pointer; display:none; }
+    .checkBtn:disabled { opacity:.6; cursor:not-allowed; }
+    @media (max-width:520px){
+      .container { padding:12px; }
+      .controls { flex-direction:column; align-items:stretch; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌿 Dynamic English A - Unit 1</h1>
-    <h2>Multiple Choice – Section A (Questions 1–5)</h2>
+    <h1>🌿 Dynamic English A — Unit 1: Multiple Choice Section A</h1>
 
-    <form id="quizForm">
-      <!-- Question 1 -->
-      <div class="question">
-        <p>1️⃣ The atmosphere around the Earth is called the ______.</p>
-        <label><input type="radio" name="q1" value="a"> a) ecosystem</label><br>
-        <label><input type="radio" name="q1" value="b"> b) environment</label><br>
-        <label><input type="radio" name="q1" value="c"> c) atmosphere</label><br>
-        <button type="button" class="checkBtn" data-question="1">Check</button>
-        <p class="explanation" id="exp1"></p>
-      </div>
+    <div id="quizForm"></div>
 
-      <!-- Question 2 -->
-      <div class="question">
-        <p>2️⃣ Plants make food through ______.</p>
-        <label><input type="radio" name="q2" value="a"> a) photosynthesis</label><br>
-        <label><input type="radio" name="q2" value="b"> b) respiration</label><br>
-        <label><input type="radio" name="q2" value="c"> c) digestion</label><br>
-        <button type="button" class="checkBtn" data-question="2">Check</button>
-        <p class="explanation" id="exp2"></p>
-      </div>
-
-      <!-- Question 3 -->
-      <div class="question">
-        <p>3️⃣ Water that falls from clouds is called ______.</p>
-        <label><input type="radio" name="q3" value="a"> a) evaporation</label><br>
-        <label><input type="radio" name="q3" value="b"> b) precipitation</label><br>
-        <label><input type="radio" name="q3" value="c"> c) condensation</label><br>
-        <button type="button" class="checkBtn" data-question="3">Check</button>
-        <p class="explanation" id="exp3"></p>
-      </div>
-
-      <!-- Question 4 -->
-      <div class="question">
-        <p>4️⃣ Which gas do humans need to breathe?</p>
-        <label><input type="radio" name="q4" value="a"> a) Oxygen</label><br>
-        <label><input type="radio" name="q4" value="b"> b) Carbon dioxide</label><br>
-        <label><input type="radio" name="q4" value="c"> c) Hydrogen</label><br>
-        <button type="button" class="checkBtn" data-question="4">Check</button>
-        <p class="explanation" id="exp4"></p>
-      </div>
-
-      <!-- Question 5 -->
-      <div class="question">
-        <p>5️⃣ Cutting down trees is called ______.</p>
-        <label><input type="radio" name="q5" value="a"> a) pollution</label><br>
-        <label><input type="radio" name="q5" value="b"> b) deforestation</label><br>
-        <label><input type="radio" name="q5" value="c"> c) reforestation</label><br>
-        <button type="button" class="checkBtn" data-question="5">Check</button>
-        <p class="explanation" id="exp5"></p>
-      </div>
-
-      <button type="button" id="submitBtn">Submit</button>
-      <button type="reset" id="resetBtn">Reset</button>
-    </form>
-
-    <button onclick="location.href='../multiple-choice.html'">⬅ Back to Sections</button>
+    <div class="controls">
+      <button id="submitBtn">Submit</button>
+      <button id="resetBtn" class="reset">Reset</button>
+      <button id="backBtn" class="secondary" onclick="location.href='../multiple-choice.html'">⬅ Back</button>
+      <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+    </div>
   </div>
 
-  <audio id="correctSound" src="../../../sounds/correct.mp3"></audio>
-  <audio id="wrongSound" src="../../../sounds/wrong.mp3"></audio>
+<script>
+/* Only the first 5 questions of Dynamic A unit 1 */
+const questions = [
+  { text: "The government is investing in solar and wind power to reduce the use of fossil fuels.",
+    options: ["environmental degradation","climate change mitigation","ocean acidification"], correct: 1,
+    explanation: "Climate change mitigation — actions taken to reduce or prevent greenhouse gas emissions." },
+  { text: "One way to lower your personal carbon footprint is to:",
+    options: ["use reusable bags","separate glass and paper","drive a car alone"], correct: 0,
+    explanation: "Using reusable bags reduces emissions from producing and disposing of single-use plastic bags." },
+  { text: "When the ocean absorbs too much CO2, it becomes more acidic, harming coral and shellfish.",
+    options: ["soil contamination","ocean acidification","toxic waste"], correct: 1,
+    explanation: "Ocean acidification — the decrease in the pH of oceans due to CO2 uptake." },
+  { text: "Clearing the Amazon rainforest leads to:",
+    options: ["an increase in greenhouse gas emissions","a cleaner atmosphere","more oxygen"], correct: 0,
+    explanation: "Deforestation releases stored carbon back into the atmosphere, increasing greenhouse gases." },
+  { text: "Environmental degradation from a new factory means the environment has:",
+    options: ["become healthier","been improved","been significantly damaged"], correct: 2,
+    explanation: "Environmental degradation — deterioration of the environment through pollution or destruction." }
+];
 
-  <script src="../../../scripts/multiple-choice.js"></script>
+/* storage key */
+const STORAGE_KEY = "unit1A_mcq_sectionA";
+
+/* rest of the Dynamic B script (submit, reset, check button, confetti) stays exactly the same */
+</script>
+<script src="../../../scripts/multiple-choice.js"></script>
 </body>
 </html>
