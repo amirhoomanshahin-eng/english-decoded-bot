@@ -1,114 +1,119 @@
-/* === Global Styles === */
-
-
+/* === General Layout === */
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom right, #0088cc, #005577);
-  color: white;
+  font-family: 'Poppins', Arial, sans-serif;
+  background: #f5f7fb;
+  color: #333;
   display: flex;
   justify-content: center;
-  /* remove align-items: center */
-  min-height: 100vh; /* allow scrolling if taller */
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
 }
-
 
 .container {
-  text-align: left;          /* better for reading questions */
-  background: rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  border-radius: 15px;
-  max-width: 600px;          /* a bit wider for quizzes */
-  margin: 20px auto;         /* add spacing from top */
+  width: 90%;
+  max-width: 700px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-/* === Headings === */
+/* === Headings and Buttons === */
 h1 {
-  margin-bottom: 15px;
-}
-
-p {
+  color: #2c3e50;
+  font-size: 1.8rem;
   margin-bottom: 20px;
 }
 
-/* === Standard Buttons === */
-button {
-  margin-top: 12px;
-  padding: 12px 20px;
-  background: #00bfff;
+.btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 18px;
+  margin: 8px;
   border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  transition: background 0.2s ease-in-out, transform 0.1s ease-in-out;
-}
-
-button:hover {
-  background: #0088cc;
-  transform: scale(1.03);
-}
-
-/* === Link Buttons (Resources) === */
-a.btn {
-  display: block;
-  margin: 10px 0;
-  padding: 12px 20px;
-  background: #4CAF50;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: background 0.2s ease-in-out, transform 0.1s ease-in-out;
-}
-
-a.btn:hover {
-  background: #45a049;
-  transform: scale(1.03);
-}
-
-/* === Response Area (if used with JS later) === */
-#response {
-  margin-top: 15px;
-}
-
-
-.question {
-  margin-bottom: 25px;
-  padding: 15px;
   border-radius: 10px;
-  background: rgba(255,255,255,0.1);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.question p {
-  margin: 0 0 10px 0;
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* === Multiple Choice Questions === */
+.question {
+  text-align: left;
   font-weight: bold;
+  margin: 20px 0 10px;
 }
 
 .options {
-  margin-left: 15px;   /* indent answer choices */
+  text-align: left;
+  margin-bottom: 15px;
 }
 
 .options label {
   display: block;
-  margin: 4px 0;
+  background: #f2f2f2;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-.feedback {
-  margin-top: 10px;
+.options input[type="radio"] {
+  margin-right: 10px;
+}
+
+.options label:hover {
+  background-color: #e9e9e9;
+}
+
+/* === Feedback Colors === */
+.correct {
+  background-color: #d4edda !important;
+  border-left: 5px solid #28a745;
+}
+
+.incorrect {
+  background-color: #f8d7da !important;
+  border-left: 5px solid #dc3545;
+}
+
+/* === Buttons (Submit / Reset / Check) === */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* === Results Section === */
+#result {
+  margin-top: 20px;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
-.correct { color: lightgreen; }
-.wrong { color: #ff6666; }
-
 .explanation {
-  margin-top: 8px;
+  background-color: #eef5ff;
+  border-left: 4px solid #007bff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-top: 5px;
   font-style: italic;
-  color: #f0f0f0;
-  display: none;
 }
