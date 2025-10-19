@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dynamic English A - Unit 1: Multiple Choice Section B</title>
-<link rel="stylesheet" href="../../../style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dynamic English A - Unit 1 (Multiple Choice — Section B)</title>
+<link rel="stylesheet" href="../../../../style.css">
 <style>
+/* exact visual style matching Dynamic B Unit 1 + bold questions */
 body { font-family: "Segoe UI", Arial, sans-serif; padding:18px; background:linear-gradient(#f6f8fb,#ffffff); color:#111; }
 .container { max-width:920px; margin:0 auto; background:rgba(255,255,255,0.95); padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.06); }
 h1 { text-align:center; margin-bottom:12px; }
 .question { margin:14px 0; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #e6eef9; }
-.question p { margin:0 0 8px 0; text-align:justify; font-weight:bold; }
+.question p { margin:0 0 8px 0; text-align:justify; font-weight:700; } /* bold questions */
 .options label { display:block; margin:6px 0; cursor:pointer; padding-left:6px; }
 .options label > input { margin-right:8px; vertical-align:middle; }
 input[type="radio"] { accent-color: #007bff; }
@@ -31,59 +32,234 @@ input[type="radio"] { accent-color: #007bff; }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>📘 Dynamic English A — Unit 1: Multiple Choice Section B</h1>
-  <div id="quizForm"></div>
-  <div class="controls">
-    <button id="submitBtn">Submit</button>
-    <button id="resetBtn" class="reset">Reset</button>
-    <button id="backBtn" class="secondary" onclick="location.href='../multiple-choice.html'">⬅ Back</button>
-    <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+  <div class="container">
+    <h1>📘 Dynamic English A — Unit 1</h1>
+    <h2 style="text-align:center; margin-top:0; margin-bottom:14px">Multiple Choice — Section B (Questions 6–10)</h2>
+
+    <div id="quizForm"></div>
+
+    <div class="controls">
+      <button id="submitBtn">Submit</button>
+      <button id="resetBtn" class="reset">Reset</button>
+      <button id="backBtn" class="secondary" onclick="location.href='../multiple-choice.html'">⬅ Back</button>
+      <div id="status" style="margin-left:auto;color:#555;font-weight:600"></div>
+    </div>
   </div>
-</div>
+
+  <audio id="correctSound" src="../../../../sounds/correct.mp3"></audio>
+  <audio id="wrongSound" src="../../../../sounds/wrong.mp3"></audio>
 
 <script>
+/* SECTION B: Questions 6–10 (environment vocabulary continued) */
 const questions = [
-  { text: "Confirmation bias, where we only pay attention to information that supports our existing beliefs, is a common type of ___________.",
-    options: ["aesthetic labor","cognitive biases","lookism"], correct: 1,
-    explanation: "B) cognitive biases — systematic patterns of deviation from rational judgment." },
-  { text: "The company's policy requires strict professional dress codes and specific grooming standards, enforcing a form of ___________ on its employees.",
-    options: ["aesthetic labor","a good fit","unconscious bias"], correct: 0,
-    explanation: "A) aesthetic labor — appearance-management required by employers." },
-  { text: "During the speed-dating event, people had to make ___________ about their potential partners after talking for only three minutes.",
-    options: ["cognitive biases","snap judgments","lookism"], correct: 1,
-    explanation: "B) snap judgments — quick, often superficial decisions." },
-  { text: "The hiring team was trained to recognize their _________, such as the tendency to prefer candidates with similar hobbies or backgrounds.",
-    options: ["unconscious biases","aesthetic labor","lookism"], correct: 0,
-    explanation: "A) unconscious biases — automatic preferences that can affect decision-making." },
-  { text: "The law against ___________ is intended to prevent discrimination in hiring based on physical attractiveness, weight, or other aspects of appearance.",
-    options: ["a good fit","snap judgment","lookism"], correct: 2,
-    explanation: "C) lookism — discrimination based on looks or appearance." }
+  {
+    text: "Factories and power plants release large amounts of greenhouse gas emissions, which are the primary cause of:",
+    options: ["global warming and climate change","increased biodiversity in ecosystems","the purification of the air we breathe"],
+    correct: 0,
+    explanation: "Greenhouse gas emissions trap heat and drive global warming and climate change."
+  },
+  {
+    text: "The primary cause of biodiversity loss worldwide is:",
+    options: ["habitat destruction due to human activities","an increase in national parks and protected areas","the natural evolution of species"],
+    correct: 0,
+    explanation: "Habitat destruction (deforestation, urban expansion, agriculture) is the main driver of biodiversity loss."
+  },
+  {
+    text: "The old chemical plant was shut down after it was discovered to be leaking toxic waste into the ground. This dangerous material:",
+    options: ["can be safely disposed of in any local bin","poses a serious risk to human and environmental health","is beneficial for plant growth"],
+    correct: 1,
+    explanation: "Toxic waste can contaminate soil and water and harm people and ecosystems."
+  },
+  {
+    text: "Most of our non-recycled household trash ends up in landfill sites, which are:",
+    options: ["specialized facilities for burning waste for energy","areas of land where waste is buried and accumulates","centers for sorting and recycling materials"],
+    correct: 1,
+    explanation: "Landfills are areas where waste is buried; they accumulate waste and can pollute soil and groundwater."
+  },
+  {
+    text: "The farmers couldn't grow crops because of the soil contamination from the nearby industrial site. This means the soil was:",
+    options: ["very fertile and rich in nutrients","polluted with harmful substances","perfectly safe for agriculture"],
+    correct: 1,
+    explanation: "Soil contamination introduces harmful chemicals that make land unsafe for farming."
+  }
 ];
 
-const STORAGE_KEY = "unit1A_mcq_sectionB";
+const STORAGE_KEY = "unit1A_mcq_sectionB_v2";
 let savedState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: [], submitted: false, checked: {} };
 const form = document.getElementById("quizForm");
 
-questions.forEach((q,i)=>{
-  const wrapper = document.createElement("div");
-  wrapper.className = "question";
-  wrapper.id = `question-${i}`;
-  let html = `<p>${i+1}. ${q.text}</p><div class="options" role="radiogroup">`;
-  q.options.forEach((opt, idx)=>{
-    const isChecked = (savedState.answers && savedState.answers[i]===idx) ? "checked" : "";
-    const disabled = savedState.submitted ? "disabled" : "";
-    html += `<label><input type="radio" name="q${i}" value="${idx}" ${isChecked} ${disabled}> ${String.fromCharCode(65+idx)}. ${opt}</label>`;
+function renderQuestions() {
+  form.innerHTML = "";
+  questions.forEach((q, i) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "question";
+    wrapper.id = `question-${i}`;
+
+    let html = `<p>${i+1}. ${q.text}</p><div class="options" role="radiogroup">`;
+    q.options.forEach((opt, idx) => {
+      const isChecked = (savedState.answers && savedState.answers[i] === idx) ? "checked" : "";
+      const disabled = savedState.submitted ? "disabled" : "";
+      html += `<label><input type="radio" name="q${i}" value="${idx}" ${isChecked} ${disabled}> ${String.fromCharCode(65+idx)}. ${opt}</label>`;
+    });
+    html += `</div>
+      <div class="feedback" id="feedback-${i}"></div>
+      <div class="explanation" id="explanation-${i}">${q.explanation}</div>
+      <button type="button" class="checkBtn" data-index="${i}">Check</button>`;
+    wrapper.innerHTML = html;
+    form.appendChild(wrapper);
   });
-  html += `</div><div class="feedback" id="feedback-${i}"></div>
-  <div class="explanation" id="explanation-${i}">${q.explanation}</div>
-  <button type="button" class="checkBtn" data-index="${i}">Check</button>`;
-  wrapper.innerHTML = html;
-  form.appendChild(wrapper);
+}
+
+renderQuestions();
+
+/* UI & behavior */
+const submitBtn = document.getElementById("submitBtn");
+const resetBtn = document.getElementById("resetBtn");
+const statusDiv = document.getElementById("status");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+
+function showCheckButtons(show){
+  document.querySelectorAll(".checkBtn").forEach(btn => btn.style.display = show ? "inline-block" : "none");
+}
+
+if (savedState.submitted) {
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — use Check buttons to reveal answers";
+}
+
+submitBtn.addEventListener("click", () => {
+  const answers = [];
+  const unanswered = [];
+  questions.forEach((_, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    if (!sel) unanswered.push(i+1);
+    else answers[i] = parseInt(sel.value, 10);
+  });
+
+  if (unanswered.length > 0) {
+    alert("Please answer all questions: " + unanswered.join(", "));
+    return;
+  }
+
+  savedState.answers = answers;
+  savedState.submitted = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+
+  document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+  showCheckButtons(true);
+  submitBtn.disabled = true;
+  statusDiv.textContent = "Submitted — press a Check button for each question to reveal result";
 });
 
-// JS for submit, reset, check buttons, confetti (same as Section A)
-// ...
+resetBtn.addEventListener("click", () => {
+  if (!confirm("Reset your answers for this quiz?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  savedState = { answers: [], submitted: false, checked: {} };
+  renderQuestions();
+  submitBtn.disabled = false;
+  statusDiv.textContent = "";
+});
+
+/* lightweight confetti */
+function launchConfetti(){
+  const c = document.createElement("div");
+  c.style.position = "fixed"; c.style.left = 0; c.style.top = 0; c.style.width = "100%"; c.style.height = "100%";
+  c.style.pointerEvents = "none"; c.style.zIndex = 9999;
+  document.body.appendChild(c);
+  for (let i=0;i<25;i++){
+    const piece = document.createElement("div");
+    piece.style.position="absolute";
+    piece.style.width="8px"; piece.style.height="8px"; piece.style.borderRadius="2px";
+    piece.style.left = (Math.random()*100) + "%";
+    piece.style.top = "-5%";
+    piece.style.background = `hsl(${Math.floor(Math.random()*360)} 80% 60%)`;
+    piece.style.opacity = "0.95";
+    piece.style.transition = `transform ${1.2+Math.random()}s linear, opacity 1.2s linear`;
+    c.appendChild(piece);
+    setTimeout(()=> {
+      piece.style.transform = `translateY(${120+Math.random()*60}vh) rotate(${Math.random()*720}deg)`;
+      piece.style.opacity = "0";
+    }, 20);
+    setTimeout(()=> piece.remove(), 1800);
+  }
+  setTimeout(()=> c.remove(), 2000);
+}
+
+/* check button */
+async function handleCheck(i){
+  const answerIndex = (savedState.answers && typeof savedState.answers[i] !== "undefined") ? savedState.answers[i] : (() => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    return sel ? parseInt(sel.value, 10) : null;
+  })();
+
+  const correctIndex = questions[i].correct;
+  const feedbackEl = document.getElementById(`feedback-${i}`);
+  const explanationEl = document.getElementById(`explanation-${i}`);
+  const labels = document.querySelectorAll(`#question-${i} .options label`);
+
+  labels.forEach((lab) => {
+    lab.classList.remove("label-correct", "label-wrong");
+    lab.style.fontWeight = "normal";
+  });
+
+  if (answerIndex === null) {
+    feedbackEl.textContent = "No answer selected.";
+    return;
+  }
+
+  if (answerIndex === correctIndex) {
+    labels[answerIndex].classList.add("label-correct");
+    labels[answerIndex].style.fontWeight = "700";
+    feedbackEl.textContent = "✅ Correct!";
+    try { correctSound.currentTime = 0; correctSound.play(); } catch(e){}
+    launchConfetti();
+  } else {
+    labels[answerIndex].classList.add("label-wrong");
+    labels[answerIndex].style.fontWeight = "700";
+    labels[correctIndex].classList.add("label-correct");
+    labels[correctIndex].style.fontWeight = "700";
+    feedbackEl.textContent = "❌ Wrong";
+    try { wrongSound.currentTime = 0; wrongSound.play(); } catch(e){}
+  }
+
+  explanationEl.style.display = "block";
+
+  savedState.checked = savedState.checked || {};
+  savedState.checked[i] = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+}
+
+/* attach listeners */
+function attachCheckListeners(){
+  document.querySelectorAll(".checkBtn").forEach(btn => {
+    btn.removeEventListener("click", btn._listener);
+    btn._listener = (e) => {
+      const idx = parseInt(e.currentTarget.dataset.index, 10);
+      e.currentTarget.disabled = true;
+      handleCheck(idx);
+    };
+    btn.addEventListener("click", btn._listener);
+  });
+}
+attachCheckListeners();
+
+/* restore checked state */
+if (savedState.submitted) {
+  showCheckButtons(true);
+  document.querySelectorAll(".checkBtn").forEach(btn=>{
+    const idx = parseInt(btn.dataset.index, 10);
+    btn.style.display = "inline-block";
+    if (savedState.checked && savedState.checked[idx]) { btn.disabled = true; handleCheck(idx); }
+    else btn.disabled = false;
+  });
+}
+
+/* reattach after render (for resets) */
+const observer = new MutationObserver(()=> attachCheckListeners());
+observer.observe(form, { childList: true, subtree: true });
 </script>
 </body>
 </html>
