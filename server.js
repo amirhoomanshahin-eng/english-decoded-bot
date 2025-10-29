@@ -1,4 +1,4 @@
-   import express from "express";
+import express from "express";
 import path from "path";
 
 const app = express();
@@ -13,10 +13,9 @@ app.get("/api/hello", (req, res) => {
 });
 
 // Example route showing how to use built-in fetch
-// You can remove or replace this with your AI request logic
 app.get("/api/test-fetch", async (req, res) => {
   try {
-    const response = await fetch("https://api.github.com"); // example API
+    const response = await fetch("https://api.github.com");
     const data = await response.json();
     res.json({ success: true, data });
   } catch (error) {
@@ -24,4 +23,6 @@ app.get("/api/test-fetch", async (req, res) => {
   }
 });
 
-app.listen(3000, '0.0.0.0', () => console.log('Server running'));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`✅ Server running on port ${PORT}`)
+);
