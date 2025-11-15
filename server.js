@@ -23,6 +23,38 @@ app.get("/api/test-fetch", async (req, res) => {
   }
 });
 
+// TELEGRAM BOT WEBHOOK
+app.use(express.json());
+
+app.post(`/webhook/${process.env.BOT_TOKEN}`, async (req, res) => {
+  try {
+    const update = req.body;
+
+    console.log("📩 Telegram update:", update);
+
+    // basic test reply for now
+    if (update.message) {
+      const chatId = update.message.chat.id;
+      const text = "Your bot is connected to ArvanCloud!";
+      
+      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: text,
+        }),
+      });
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Webhook error:", err);
+    res.sendStatus(500);
+  }
+});
+
+
 app.listen(PORT, "0.0.0.0", () =>
   console.log(`✅ Server running on port ${PORT}`)
 );
