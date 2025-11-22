@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;   // <<< CHANGED FROM 3000 → 3001
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
 // ====== STATIC FRONTEND (Mini App) ======
