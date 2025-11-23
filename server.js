@@ -5,89 +5,39 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;   // <<< CHANGED FROM 3000 → 3001
-const BOT_TOKEN = process.env.BOT_TOKEN;
+const PORT = 3001; // <---- IMPORTANT
 
-// ====== STATIC FRONTEND (Mini App) ======
+// STATIC FILES
 app.use(express.static(path.join(process.cwd(), "public")));
-
-// ====== Example backend API ======
-app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
-
-// ====== TEST route ======
-app.get("/api/test-fetch", async (req, res) => {
-  try {
-    const response = await fetch("https://api.github.com");
-    const data = await response.json();
-    res.json({ success: true, data });
-  } catch (e) {
-    res.status(500).json({ success: false, error: e.message });
-  }
-});
-
-// ====== TELEGRAM WEBHOOK ======
 app.use(express.json());
 
+// TELEGRAM WEBHOOK
 app.post("/webhook", async (req, res) => {
-  const update = req.body;
-  console.log("📩 Telegram update:", update);
-
   try {
-    // Handle /start command — send Mini App button
-    if (update.message && update.message.text === "/start") {
+    const update = req.body;
+    console.log("📩 Telegram update:", update);
+
+    if (update.message) {
       const chatId = update.message.chat.id;
 
-      await fetch(
-        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: "Welcome! Tap the button below to open the Mini App 👇",
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: "Open Mini App",
-                    web_app: {
-                      url: "https://shahin-language-academy.ir"
-                    }
-                  }
-                ]
-              ]
-            }
-          })
-        }
-      );
-    }
-
-    // Handle /test command
-    if (update.message && update.message.text === "/test") {
-      const chatId = update.message.chat.id;
-      await fetch(
-        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: "Webhook is working!"
-          })
-        }
-      );
+      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: "Your bot is now connected on port 3001!"
+        })
+      });
     }
 
     res.sendStatus(200);
-  } catch (error) {
-    console.error("❌ Webhook error:", error);
+  } catch (err) {
+    console.error("❌ Webhook error:", err);
     res.sendStatus(500);
   }
 });
 
-// ====== START SERVER ======
+// START SERVER
 app.listen(PORT, "0.0.0.0", () =>
-  console.log(`✅ Server running on port ${PORT}`)
+  console.log(`✅ BOT running on port ${PORT}`)
 );
