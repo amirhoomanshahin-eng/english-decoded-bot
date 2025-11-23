@@ -1,17 +1,14 @@
-import express from "express";
-import path from "path";
-import dotenv from "dotenv";
-
-dotenv.config();
+require("dotenv").config();
+const express = require("express");
+const path = require("path");
+const fetch = require("node-fetch");
 
 const app = express();
-const PORT = 3001; // <---- IMPORTANT
+const PORT = 3001;
 
-// STATIC FILES
-app.use(express.static(path.join(process.cwd(), "public")));
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), "public")));
 
-// TELEGRAM WEBHOOK
 app.post("/webhook", async (req, res) => {
   try {
     const update = req.body;
@@ -37,7 +34,6 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-// START SERVER
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`✅ BOT running on port ${PORT}`)
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ BOT running on port ${PORT}`);
+});
