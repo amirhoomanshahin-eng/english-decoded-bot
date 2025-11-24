@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const fetch = require("node-fetch");
+const crypto = require("crypto");        // <--- NEW
+const { exec } = require("child_process"); // <--- NEW
 
 const app = express();
 const PORT = 3001;
@@ -9,6 +11,41 @@ const PORT = 3001;
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "public")));
 
+// -------------------------------
+// 🔥 GITHUB AUTO-DEPLOY WEBHOOK
+// -------------------------------
+app.post("/deploy", (req, res) => {
+  const signature = req.headers["x-hub-signature-256"];
+  const secret = "MY_SECRET_123"; // <--- CHANGE TO YOUR SECRET
+
+  const body = JSON.stringify(req.body);
+  const hash = `sha256=${crypto
+    .createHmac("sha256", secret)
+    .update(body)
+    .digest("hex")}`;
+
+  if (signature !== hash) {
+    console.log("❌ Invalid GitHub signature - Unauthorized deploy attempt");
+    return res.status(401).send("Unauthorized");
+  }
+
+  console.log("🚀 Valid GitHub webhook - starting deployment...");
+
+  exec("bash /srv/mybot/deploy.sh", (error, stdout, stderr) => {
+    if (error) {
+      console.error("❌ Deploy script error:", error);
+      return;
+    }
+    console.log("📦 Deploy output:", stdout);
+    console.log("⚠ Deploy errors:", stderr);
+  });
+
+  res.send("Deployment started!");
+});
+
+// -------------------------------
+// TELEGRAM WEBHOOK
+// -------------------------------
 app.post("/webhook", async (req, res) => {
   try {
     const update = req.body;
@@ -34,6 +71,9 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
+// -------------------------------
+// START SERVER
+// -------------------------------
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ BOT running on port ${PORT}`);
 });
