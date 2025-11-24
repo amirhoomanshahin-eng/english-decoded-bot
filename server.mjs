@@ -19,7 +19,7 @@ bot.on('message', (msg) => {
   }
 });
 
-// --- Express Server (optional) ---
+// --- Express Server ---
 const app = express();
 const PORT = 3001;
 
