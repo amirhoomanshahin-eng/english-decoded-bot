@@ -1,41 +1,28 @@
 // server.mjs
-import 'dotenv/config'; // automatically loads .env into process.env
-import express from 'express'; // if you are using Express
-import fetch from 'node-fetch'; // ES Module fetch
-import path from 'path';
-import { fileURLToPath } from 'url';
+import TelegramBot from 'node-telegram-bot-api';
+import express from 'express';
 
-// ---- Utilities for __dirname in ESM ----
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// --- Telegram Bot ---
+const TOKEN = '8093299819:AAFnsBL1N4pAjkyiA9t9Mn7FU3ICeG_zF7c';
+const bot = new TelegramBot(TOKEN, { polling: true });
 
-// ---- App Setup ----
-const app = express();
-const PORT = process.env.PORT || 3001;
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text || '';
 
-// ---- Middleware ----
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+  console.log(`Message from ${chatId}: ${text}`);
 
-// Example route
-app.get('/', (req, res) => {
-  res.send('Hello! Bot is running.');
-});
-
-// Example fetch usage
-app.get('/data', async (req, res) => {
-  try {
-    const response = await fetch('https://api.github.com');
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error('Fetch error:', err);
-    res.status(500).json({ error: 'Failed to fetch data' });
+  if (text.toLowerCase() === '/start') {
+    bot.sendMessage(chatId, '👋 Hello! Bot is running.');
+  } else {
+    bot.sendMessage(chatId, `You said: ${text}`);
   }
 });
 
-// ---- Start server ----
-app.listen(PORT, () => {
-  console.log(`BOT running on port ${PORT}`);
-});
+// --- Express Server (optional) ---
+const app = express();
+const PORT = 3001;
+
+app.get('/', (req, res) => res.send('Bot is running!'));
+
+app.listen(PORT, () => console.log(`Express server listening on port ${PORT}`));
