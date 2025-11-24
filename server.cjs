@@ -1,9 +1,9 @@
    require("dotenv").config();
-import express = from 'express';
-import path = from 'path';
-import fetch = from 'node-fetch';
-import crypto = from 'crypto';        // <--- NEW
-import { exec } = from 'child_process'; // <--- NEW
+import express  from 'express';
+import path from 'path';
+import fetch  from 'node-fetch';
+import crypto  from 'crypto';        // <--- NEW
+import exec   from 'child_process'; // <--- NEW
 
 const app = express();
 const PORT = 3001;
