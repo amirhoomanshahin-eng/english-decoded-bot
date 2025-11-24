@@ -1,7 +1,7 @@
    require("dotenv").config();
 const express = require("express");
 const path = require("path");
-import fetch = from("node-fetch");
+import fetch = from 'node-fetch';
 const crypto = require("crypto");        // <--- NEW
 const { exec } = require("child_process"); // <--- NEW
 
