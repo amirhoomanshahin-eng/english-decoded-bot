@@ -2,8 +2,8 @@
 import express = from 'express';
 import path = from 'path';
 import fetch = from 'node-fetch';
-const crypto = require("crypto");        // <--- NEW
-const { exec } = require("child_process"); // <--- NEW
+import crypto = from 'crypto';        // <--- NEW
+import { exec } = from 'child_process'; // <--- NEW
 
 const app = express();
 const PORT = 3001;
