@@ -1,75 +1,41 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import express from 'express';
+// server.mjs
+import 'dotenv/config'; // automatically loads .env into process.env
+import express from 'express'; // if you are using Express
+import fetch from 'node-fetch'; // ES Module fetch
 import path from 'path';
-import fetch from 'node-fetch';
-import crypto from 'crypto';
-import { exec } from 'child_process';
+import { fileURLToPath } from 'url';
 
+// ---- Utilities for __dirname in ESM ----
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ---- App Setup ----
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
+// ---- Middleware ----
 app.use(express.json());
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 🔥 GITHUB AUTO-DEPLOY WEBHOOK
-app.post('/deploy', (req, res) => {
-  const signature = req.headers['x-hub-signature-256'];
-  const secret = 'MY_SECRET_123'; // <--- CHANGE TO YOUR SECRET
-
-  const body = JSON.stringify(req.body);
-  const hash = `sha256=${crypto
-    .createHmac('sha256', secret)
-    .update(body)
-    .digest('hex')}`;
-
-  if (signature !== hash) {
-    console.log('❌ Invalid GitHub signature - Unauthorized deploy attempt');
-    return res.status(401).send('Unauthorized');
-  }
-
-  console.log('🚀 Valid GitHub webhook - starting deployment...');
-
-  exec('bash /srv/mybot/deploy.sh', (error, stdout, stderr) => {
-    if (error) {
-      console.error('❌ Deploy script error:', error);
-      return;
-    }
-    console.log('📦 Deploy output:', stdout);
-    console.log('⚠ Deploy errors:', stderr);
-  });
-
-  res.send('Deployment started!');
+// Example route
+app.get('/', (req, res) => {
+  res.send('Hello! Bot is running.');
 });
 
-// TELEGRAM WEBHOOK
-app.post('/webhook', async (req, res) => {
+// Example fetch usage
+app.get('/data', async (req, res) => {
   try {
-    const update = req.body;
-    console.log('📩 Telegram update:', update);
-
-    if (update.message) {
-      const chatId = update.message.chat.id;
-
-      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: 'Your bot is now connected on port 3001!',
-        }),
-      });
-    }
-
-    res.sendStatus(200);
+    const response = await fetch('https://api.github.com');
+    const data = await response.json();
+    res.json(data);
   } catch (err) {
-    console.error('❌ Webhook error:', err);
-    res.sendStatus(500);
+    console.error('Fetch error:', err);
+    res.status(500).json({ error: 'Failed to fetch data' });
   }
 });
 
-// START SERVER
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ BOT running on port ${PORT}`);
+// ---- Start server ----
+app.listen(PORT, () => {
+  console.log(`BOT running on port ${PORT}`);
 });
