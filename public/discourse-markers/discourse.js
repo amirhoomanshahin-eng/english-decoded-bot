@@ -1,5 +1,5 @@
 // discourse.js
-const GEMINI_API_KEY = AIzaSyAPxBhxb4itgNsjCQCIiL9MeNcPtT8IdOQ;
+const GEMINI_API_KEY = "AIzaSyAPxBhxb4itgNsjCQCIiL9MeNcPtT8IdOQ";
 
 async function checkSentence(sentence) {
   const prompt = `
