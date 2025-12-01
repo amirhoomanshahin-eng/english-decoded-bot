@@ -1,53 +1,65 @@
+// discourse.js
+const GEMINI_API_KEY = AIzaSyAPxBhxb4itgNsjCQCIiL9MeNcPtT8IdOQ;
+
+async function checkSentence(sentence) {
+  const prompt = `
+Your job is to evaluate the user's sentence for:
+1. Correct grammar and fluency.
+2. Proper use of the discourse marker "above all".
+3. Give friendly feedback.
+4. Provide a corrected and improved version.
+
+Return the answer in clean HTML.
+
+User sentence: "${sentence}"
+  `;
+
+  const body = {
+    contents: [{
+      parts: [{ text: prompt }]
+    }]
+  };
+
+  const response = await fetch(
+    "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from AI.";
+}
+
+// Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
-  const textarea = document.getElementById("userExample");
   const checkBtn = document.getElementById("checkBtn");
   const resetBtn = document.getElementById("resetBtn");
   const feedbackDiv = document.getElementById("feedback");
+  const userExample = document.getElementById("userExample");
 
-  // Load saved data
-  const savedExample = localStorage.getItem("aboveAllExample");
-  const savedFeedback = localStorage.getItem("aboveAllFeedback");
-
-  if (savedExample) textarea.value = savedExample;
-  if (savedFeedback) feedbackDiv.innerHTML = savedFeedback;
-
-  // Handle AI check (sends example to backend)
   checkBtn.addEventListener("click", async () => {
-    const example = textarea.value.trim();
-    if (!example) {
-      feedbackDiv.innerHTML = "<p style='color:red'>⚠ Please write a sentence first.</p>";
+    const sentence = userExample.value.trim();
+
+    if (!sentence) {
+      feedbackDiv.innerHTML = "⚠️ Please write a sentence first.";
       return;
     }
 
-    // Save example in localStorage
-    localStorage.setItem("aboveAllExample", example);
+    feedbackDiv.innerHTML = "⏳ Checking your sentence...";
 
-    // Call backend AI check
-    try {
-      const res = await fetch("/api/check-example", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ example })
-      });
-      const data = await res.json();
+    const result = await checkSentence(sentence);
 
-      const feedback = `<p><b>Result:</b> ${data.correct ? "✅ Correct!" : "❌ Incorrect"}<br>${data.explanation}</p>`;
-      feedbackDiv.innerHTML = feedback;
-
-      // Save feedback
-      localStorage.setItem("aboveAllFeedback", feedback);
-
-    } catch (err) {
-      console.error(err);
-      feedbackDiv.innerHTML = "<p style='color:red'>⚠ Error checking example. Try again later.</p>";
-    }
+    feedbackDiv.innerHTML = `
+      <h3>AI Feedback</h3>
+      <p>${result}</p>
+    `;
   });
 
-  // Reset example
   resetBtn.addEventListener("click", () => {
-    textarea.value = "";
+    userExample.value = "";
     feedbackDiv.innerHTML = "";
-    localStorage.removeItem("aboveAllExample");
-    localStorage.removeItem("aboveAllFeedback");
   });
 });
